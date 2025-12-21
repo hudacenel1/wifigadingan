@@ -3,148 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Dashboard - WiFi Joss</title>
+    <title>WiFi Gadingan Joss - Premium Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #0a0a0a;
-            --card-focus: #ffffff;
-            --accent-color: #00c6ff;
+            --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --accent-glow: rgba(79, 172, 254, 0.5);
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
 
         body {
-            background-color: var(--bg-dark);
+            background: radial-gradient(circle at top left, #1e3c72, #2a5298, #0a0a0a);
             color: white;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 40px;
-            overflow: hidden; /* Mencegah scroll mouse */
+            padding: 50px;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Latar belakang animasi halus agar lebih hidup */
+        body::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0, 198, 255, 0.1) 0%, transparent 70%);
+            animation: moveBg 15s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBg {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(5%, 5%); }
         }
 
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 50px;
         }
 
-        .time { font-size: 1.5rem; font-weight: bold; }
+        .logo-area h1 {
+            font-size: 3rem;
+            margin: 0;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
 
-        h2 { color: #aaa; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
+        .time-box {
+            background: var(--glass);
+            padding: 15px 30px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            font-size: 2.2rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-        /* Row Kontainer */
+        h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 25px;
+        }
+
         .app-row {
             display: flex;
-            gap: 20px;
+            gap: 30px;
             margin-bottom: 50px;
-            padding: 10px 0;
         }
 
-        /* Item Aplikasi */
         .app-item {
-            background: #1a1a1a;
-            width: 200px;
-            height: 120px;
-            border-radius: 12px;
+            background: var(--glass);
+            width: 240px;
+            height: 150px;
+            border-radius: 24px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-decoration: none;
             color: white;
-            border: 4px solid transparent;
-            transition: all 0.3s ease;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             outline: none;
         }
 
-        /* Efek Fokus Remote */
+        /* Efek Fokus Super Keren */
         .app-item:focus {
-            transform: scale(1.15);
-            border-color: var(--card-focus);
-            background: var(--accent-color);
-            box-shadow: 0 10px 30px rgba(0, 198, 255, 0.4);
+            transform: scale(1.15) translateY(-10px);
+            background: white;
+            border-color: white;
+            box-shadow: 0 20px 40px var(--accent-glow);
         }
 
-        .app-item i { font-size: 2.5rem; margin-bottom: 10px; }
-        .app-item span { font-weight: bold; font-size: 1rem; }
+        .app-item:focus i, .app-item:focus span {
+            color: #1e3c72;
+        }
 
-        /* Tombol Kembali */
+        .app-item i {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .app-item span {
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
         .back-btn {
-            position: fixed;
-            bottom: 40px;
-            left: 40px;
-            padding: 10px 20px;
-            background: #333;
-            border-radius: 5px;
+            margin-top: auto;
+            align-self: flex-start;
+            padding: 15px 35px;
+            background: var(--glass);
+            border-radius: 15px;
             color: white;
             text-decoration: none;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            font-weight: bold;
             outline: none;
-            border: 2px solid transparent;
+            transition: 0.3s;
         }
 
         .back-btn:focus {
-            background: #ff4444;
+            background: #ff416c;
             border-color: white;
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 65, 108, 0.4);
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>WIFI GADINGAN <span style="color: var(--accent-color);">& TV</span></h1>
-        <div class="time" id="clock">12:00</div>
+        <div class="logo-area">
+            <h1>WIFI GADINGAN JOSS</h1>
+        </div>
+        <div class="time-box" id="clock">00:00</div>
     </div>
 
-    <h2>Aplikasi Hiburan</h2>
+    <h2><i class="fas fa-star" style="color: #ffd700;"></i> Entertainment</h2>
     <div class="app-row">
         <a href="https://www.youtube.com" class="app-item" tabindex="1">
+            <i class="fab fa-youtube" style="color: #ff0000;"></i>
             <span>YOUTUBE</span>
         </a>
         <a href="tv.html" class="app-item" tabindex="2">
+            <i class="fas fa-globe-americas" style="color: #4facfe;"></i>
             <span>TV LUAR</span>
         </a>
         <a href="https://www.vidio.com" class="app-item" tabindex="3">
+            <i class="fas fa-play" style="color: #ff0055;"></i>
             <span>VIDIO</span>
         </a>
         <a href="tvindonesia.html" class="app-item" tabindex="4">
-            <span>TV INDONESIA</span>
+            <i class="fas fa-satellite-dish" style="color: #00ff88;"></i>
+            <span>TV LOKAL</span>
         </a>
     </div>
 
-    <h2>Alat & Sistem</h2>
+    <h2><i class="fas fa-tools"></i> Utility & Info</h2>
     <div class="app-row">
         <a href="https://fast.com" class="app-item" tabindex="5">
-            <span>CEK SPEED</span>
+            <i class="fas fa-bolt" style="color: #fce38a;"></i>
+            <span>SPEED TEST</span>
         </a>
-        <a href="https://lobstertube.com" class="app-item" tabindex="6">
-            <span>BF</span>
-        </a>
-        <a href="paketwifi.html" class="app-item" style="background: #333;" tabindex="7">
-            <span>HARGA PAKET WIFI</span>
+        <a href="paketwifi.html" class="app-item" tabindex="6">
+            <i class="fas fa-wallet" style="color: #a8edea;"></i>
+            <span>DAFTAR HARGA</span>
         </a>
     </div>
 
-    <a href="index.html" class="back-btn" tabindex="8">← Kembali ke Utama</a>
+    <a href="index.html" class="back-btn" tabindex="7">
+        <i class="fas fa-chevron-left"></i> KEMBALI KE UTAMA
+    </a>
 
     <script>
-        // Fungsi Jam Real-time
         function updateClock() {
             const now = new Date();
-            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
-                            now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('clock').innerText = timeStr;
+            document.getElementById('clock').innerText = 
+                now.getHours().toString().padStart(2, '0') + ":" + 
+                now.getMinutes().toString().padStart(2, '0');
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Fokus otomatis ke aplikasi pertama saat buka
-        window.onload = () => {
-            document.querySelector('.app-item').focus();
-        };
+        window.onload = () => document.querySelector('.app-item').focus();
+
+        // Navigasi Remote
+        document.addEventListener('keydown', (e) => {
+            const items = Array.from(document.querySelectorAll('[tabindex]'));
+            let current = items.indexOf(document.activeElement);
+            
+            if (e.key === "ArrowRight") current++;
+            if (e.key === "ArrowLeft") current--;
+            if (e.key === "ArrowDown") current += 4;
+            if (e.key === "ArrowUp") current -= 4;
+
+            if (current >= 0 && current < items.length) {
+                items[current].focus();
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
