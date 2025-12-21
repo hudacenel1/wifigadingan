@@ -3,78 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TV Online Indonesia - Live Streaming</title>
+    <title>WIFIGadingan - Streaming TV Indonesia</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #121212; color: white; }
-        .navbar { background-color: #000; border-bottom: 2px solid #e50914; }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
-        .channel-list { height: 500px; overflow-y: auto; background: #1f1f1f; padding: 15px; border-radius: 8px; }
-        .channel-item { 
-            display: flex; align-items: center; padding: 10px; margin-bottom: 10px; 
-            background: #333; cursor: pointer; border-radius: 5px; transition: 0.3s;
+        body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .navbar { background-color: #000; border-bottom: 3px solid #e50914; padding: 15px 0; }
+        .navbar-brand { font-size: 1.5rem; letter-spacing: 1px; }
+        .navbar-brand strong { color: #e50914; }
+        
+        /* Style untuk link menu baru */
+        .nav-link { color: #ccc !important; transition: 0.3s; margin-left: 15px; }
+        .nav-link:hover { color: #e50914 !important; }
+        .nav-link.active-page { color: #fff !important; font-weight: bold; border-bottom: 2px solid #e50914; }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .channel-item:hover { background: #e50914; color: #fff; }
-        .channel-item.active { background: #e50914; font-weight: bold; }
-        .footer { text-align: center; padding: 20px; font-size: 0.8rem; color: #666; }
-        ::-webkit-scrollbar { width: 5px; }
+        
+        iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 0;
+        }
+
+        #videoOverlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('gpt.png'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        #videoOverlay:hover { filter: brightness(0.8); }
+
+        .channel-container {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            height: 550px;
+            display: flex;
+            flex-direction: column;
+        }
+        .channel-list { overflow-y: auto; flex-grow: 1; }
+        .channel-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .channel-item:hover { background: #383838; }
+        .channel-item.active {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #e50914;
+            font-weight: bold;
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #e50914; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark mb-4">
+<nav class="navbar navbar-expand-lg navbar-dark mb-4">
     <div class="container">
-        <a class="navbar-brand" href="#"><strong>TV</strong>ONLINE</a>
+        <a class="navbar-brand" href="#"><strong>WIFI</strong> & TV Gadingan</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active-page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="tv.html">TV internasional</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.vidio.com/live/204-sctv" target="_blank">VIDEO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://lobstertube.com" target="_blank">LobsterTube</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
 <div class="container">
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <div class="video-container">
-                <iframe id="mainPlayer" src="https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0iSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=" allowfullscreen></iframe>
+            <div class="video-wrapper">
+                <div id="videoOverlay" onclick="startExperience()"></div>
+                <iframe id="mainPlayer" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
             </div>
-            <h4 class="mt-3" id="channelTitle">Sedang Menonton: RCTI</h4>
-            <p class="text-muted">Gunakan daftar di samping untuk mengganti saluran.</p>
+            <div class="mt-3">
+                <h3 id="channelTitle" style="color: #eee;">GPT</h3>
+            </div>
         </div>
 
         <div class="col-lg-4">
-            <h5 class="mb-3">Daftar Saluran</h5>
-            <div class="channel-list">
-                <div class="channel-item active" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0iSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=')">RCTI</div>
-                <div class="channel-item" onclick="changeChannel('GTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">GTV</div>
-                <div class="channel-item" onclick="changeChannel('iNews', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">iNews</div>
-                <div class="channel-item" onclick="changeChannel('MNCTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">MNCTV</div>
-                <div class="channel-item" onclick="changeChannel('TRANS7', 'https://20.detik.com/watch/livestreaming-trans7')">TRANS7</div>
-                <div class="channel-item" onclick="changeChannel('TRANS TV', 'https://20.detik.com/watch/livestreaming-transtv')">TRANS TV</div>
-                <div class="channel-item" onclick="changeChannel('CNN Indonesia', 'https://www.cnnindonesia.com/tv/embed?ref=transmedia')">CNN Indonesia</div>
-                <div class="channel-item" onclick="changeChannel('CNBC Indonesia', 'https://www.cnbcindonesia.com/embed/tv?ref=transmedia')">CNBC Indonesia</div>
-                <div class="channel-item" onclick="changeChannel('SCTV', 'https://www.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true&player_only=true')">SCTV</div>
+            <div class="channel-container">
+                <h5 class="mb-3">Daftar Saluran</h5>
+                <div class="channel-list" id="listContent">
+                    <div class="channel-item active" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=')">RCTI</div>
+                    <div class="channel-item" onclick="changeChannel('GTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">GTV</div>
+                    <div class="channel-item" onclick="changeChannel('MNCTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">MNCTV</div>
+                    <div class="channel-item" onclick="changeChannel('iNews', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">iNews</div>
+                    <div class="channel-item" onclick="changeChannel('TRANS7', 'https://20.detik.com/watch/livestreaming-trans7')">TRANS7</div>
+                    <div class="channel-item" onclick="changeChannel('TRANS TV', 'https://20.detik.com/watch/livestreaming-transtv')">TRANS TV</div>
+                    <div class="channel-item" onclick="changeChannel('CNN Indonesia', 'https://www.cnnindonesia.com/tv/embed?ref=transmedia')">CNN Indonesia</div>
+                    <div class="channel-item" onclick="changeChannel('CNBC Indonesia', 'https://www.cnbcindonesia.com/embed/tv?ref=transmedia')">CNBC Indonesia</div>
+                    <div class="channel-item" onclick="changeChannel('SCTV', 'https://www.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true&player_only=true')">SCTV</div>
+                    <div class="channel-item" onclick="changeChannel('Indosiar', 'https://www.vidio.com/live/205-indosiar-tv-stream/embed?autoplay=true&player_only=true')">Indosiar</div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="footer">
-    <p>&copy; 2024 TV Online Player. All rights reserved.</p>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    let defaultUrl = "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=";
+    let defaultName = "RCTI";
+
+    function startExperience() {
+        document.getElementById('videoOverlay').style.display = 'none';
+        loadChannel(defaultName, defaultUrl);
+    }
+
     function changeChannel(name, url) {
-        // Ganti URL Iframe
-        document.getElementById('mainPlayer').src = url;
-        // Ganti Judul
+        const overlay = document.getElementById('videoOverlay');
+        if (overlay.style.display !== 'none') {
+            overlay.style.display = 'none';
+        }
+        loadChannel(name, url);
+    }
+
+    function loadChannel(name, url) {
+        const player = document.getElementById('mainPlayer');
+        let separator = url.includes('?') ? '&' : '?';
+        let finalUrl = `${url}${separator}autoplay=1&mute=0&muted=0&autoPlay=true`;
+
+        player.src = finalUrl;
         document.getElementById('channelTitle').innerText = 'Sedang Menonton: ' + name;
-        
-        // Update styling list
-        let items = document.querySelectorAll('.channel-item');
+
+        const items = document.querySelectorAll('.channel-item');
         items.forEach(item => {
             item.classList.remove('active');
-            if(item.innerText === name) {
-                item.classList.add('active');
-            }
+            if(item.innerText.trim() === name) item.classList.add('active');
         });
     }
 </script>
