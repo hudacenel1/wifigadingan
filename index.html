@@ -3,133 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Promo WiFi - TV Edition</title>
+    <title>TV Dashboard - WiFi Joss</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1f1f1f;
-            --accent: #00e676;
-            --text-color: #ffffff;
-            --focus-border: #ffffff;
+            --bg-dark: #0a0a0a;
+            --card-focus: #ffffff;
+            --accent-color: #00c6ff;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 40px;
-            overflow: hidden; /* Mencegah scroll yang tidak perlu pada TV */
+            overflow: hidden; /* Mencegah scroll mouse */
         }
 
-        h1 { text-align: center; font-size: 3rem; margin-bottom: 10px; }
-        p.subtitle { text-align: center; font-size: 1.5rem; color: #bbb; margin-bottom: 40px; }
-
-        /* Grid Layout Utama */
-        .grid-container {
+        .header {
             display: flex;
-            justify-content: center;
-            gap: 30px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
-        /* Styling Kartu untuk Navigasi Remote */
-        .nav-item {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 30px;
-            width: 320px;
-            text-align: center;
-            border: 4px solid transparent;
-            transition: all 0.2s ease-in-out;
-            outline: none; /* Menghilangkan outline default browser */
-            cursor: pointer;
-        }
+        .time { font-size: 1.5rem; font-weight: bold; }
 
-        /* EFEK FOKUS - Ini yang terpenting untuk TV */
-        .nav-item:focus {
-            border-color: var(--focus-border);
-            transform: scale(1.1); /* Efek zoom saat dipilih */
-            background-color: #333;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
-        }
+        h2 { color: #aaa; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; }
 
-        .price {
-            display: block;
-            font-size: 2.5rem;
-            color: var(--accent);
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        .speed { font-size: 1.2rem; color: #aaa; }
-
-        /* Daftar Situs di Bagian Bawah */
-        .site-container {
-            margin-top: 60px;
+        /* Row Kontainer */
+        .app-row {
             display: flex;
-            justify-content: center;
             gap: 20px;
+            margin-bottom: 50px;
+            padding: 10px 0;
         }
 
-        .site-button {
-            background: #2c2c2c;
-            padding: 15px 30px;
-            border-radius: 10px;
-            border: 3px solid transparent;
-            color: white;
+        /* Item Aplikasi */
+        .app-item {
+            background: #1a1a1a;
+            width: 200px;
+            height: 120px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-decoration: none;
-            font-size: 1.2rem;
+            color: white;
+            border: 4px solid transparent;
+            transition: all 0.3s ease;
             outline: none;
         }
 
-        .site-button:focus {
-            background: var(--accent);
-            color: black;
+        /* Efek Fokus Remote */
+        .app-item:focus {
+            transform: scale(1.15);
+            border-color: var(--card-focus);
+            background: var(--accent-color);
+            box-shadow: 0 10px 30px rgba(0, 198, 255, 0.4);
+        }
+
+        .app-item i { font-size: 2.5rem; margin-bottom: 10px; }
+        .app-item span { font-weight: bold; font-size: 1rem; }
+
+        /* Tombol Kembali */
+        .back-btn {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            padding: 10px 20px;
+            background: #333;
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            outline: none;
+            border: 2px solid transparent;
+        }
+
+        .back-btn:focus {
+            background: #ff4444;
             border-color: white;
-            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <h1>PROMO INTERNET TV</h1>
-    <p class="subtitle">Gunakan tombol arah pada remote untuk memilih paket</p>
-
-    <div class="grid-container">
-        <div class="nav-item" tabindex="0">
-            <h2>PAKET HEMAT</h2>
-            <span class="speed">20 Mbps</span>
-            <span class="price">150rb</span>
-            <p>Cocok untuk Streaming HD</p>
-        </div>
-
-        <div class="nav-item" tabindex="0">
-            <h2>PAKET JOSS</h2>
-            <span class="speed">50 Mbps</span>
-            <span class="price">300rb</span>
-            <p>Lancar untuk 5 Perangkat</p>
-        </div>
-
-        <div class="nav-item" tabindex="0">
-            <h2>PAKET GAMER</h2>
-            <span class="speed">100 Mbps</span>
-            <span class="price">450rb</span>
-            <p>Ping Rendah & Stabil</p>
-        </div>
+    <div class="header">
+        <h1>WIFI JOSS <span style="color: var(--accent-color);">TV</span></h1>
+        <div class="time" id="clock">12:00</div>
     </div>
 
-    <div class="site-container">
-        <a href="https://fast.com" class="site-button" tabindex="0">Cek Speed</a>
-        <a href="https://youtube.com" class="site-button" tabindex="0">Buka YouTube</a>
-        <a href="#" class="site-button" tabindex="0">Hubungi Kami</a>
+    <h2>Aplikasi Hiburan</h2>
+    <div class="app-row">
+        <a href="https://www.youtube.com" class="app-item" tabindex="1">
+            <span>YOUTUBE</span>
+        </a>
+        <a href="https://www.netflix.com" class="app-item" tabindex="2">
+            <span>NETFLIX</span>
+        </a>
+        <a href="https://www.vidio.com" class="app-item" tabindex="3">
+            <span>VIDIO</span>
+        </a>
+        <a href="https://www.primevideo.com" class="app-item" tabindex="4">
+            <span>PRIME VIDEO</span>
+        </a>
     </div>
+
+    <h2>Alat & Sistem</h2>
+    <div class="app-row">
+        <a href="https://fast.com" class="app-item" tabindex="5">
+            <span>CEK SPEED</span>
+        </a>
+        <a href="https://google.com" class="app-item" tabindex="6">
+            <span>BROWSER</span>
+        </a>
+        <a href="index.html" class="app-item" style="background: #333;" tabindex="7">
+            <span>PROMO WIFI</span>
+        </a>
+    </div>
+
+    <a href="index.html" class="back-btn" tabindex="8">← Kembali ke Utama</a>
 
     <script>
-        // Script sederhana agar saat halaman dimuat, fokus langsung ke kartu pertama
-        window.onload = function() {
-            document.querySelector('.nav-item').focus();
+        // Fungsi Jam Real-time
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('clock').innerText = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Fokus otomatis ke aplikasi pertama saat buka
+        window.onload = () => {
+            document.querySelector('.app-item').focus();
         };
     </script>
-
 </body>
 </html>
