@@ -3,174 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WIFIGadingan - Streaming TV Indonesia</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Promo WiFi - TV Edition</title>
     <style>
-        body { background-color: #0f0f0f; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .navbar { background-color: #000; border-bottom: 3px solid #e50914; padding: 15px 0; }
-        .navbar-brand { font-size: 1.5rem; letter-spacing: 1px; }
-        .navbar-brand strong { color: #e50914; }
-        
-        /* Style untuk link menu baru */
-        .nav-link { color: #ccc !important; transition: 0.3s; margin-left: 15px; }
-        .nav-link:hover { color: #e50914 !important; }
-        .nav-link.active-page { color: #fff !important; font-weight: bold; border-bottom: 2px solid #e50914; }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border: 0;
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1f1f1f;
+            --accent: #00e676;
+            --text-color: #ffffff;
+            --focus-border: #ffffff;
         }
 
-        #videoOverlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: url('gpt.png'); 
-            background-size: cover;
-            background-position: center;
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 40px;
+            overflow: hidden; /* Mencegah scroll yang tidak perlu pada TV */
+        }
+
+        h1 { text-align: center; font-size: 3rem; margin-bottom: 10px; }
+        p.subtitle { text-align: center; font-size: 1.5rem; color: #bbb; margin-bottom: 40px; }
+
+        /* Grid Layout Utama */
+        .grid-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            z-index: 100;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
+            gap: 30px;
         }
 
-        #videoOverlay:hover { filter: brightness(0.8); }
-
-        .channel-container {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            height: 550px;
-            display: flex;
-            flex-direction: column;
-        }
-        .channel-list { overflow-y: auto; flex-grow: 1; }
-        .channel-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            background: #2a2a2a;
-            border-radius: 8px;
+        /* Styling Kartu untuk Navigasi Remote */
+        .nav-item {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+            border: 4px solid transparent;
+            transition: all 0.2s ease-in-out;
+            outline: none; /* Menghilangkan outline default browser */
             cursor: pointer;
-            transition: all 0.2s;
         }
-        .channel-item:hover { background: #383838; }
-        .channel-item.active {
-            background: rgba(229, 9, 20, 0.2);
-            border: 1px solid #e50914;
-            color: #e50914;
+
+        /* EFEK FOKUS - Ini yang terpenting untuk TV */
+        .nav-item:focus {
+            border-color: var(--focus-border);
+            transform: scale(1.1); /* Efek zoom saat dipilih */
+            background-color: #333;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .price {
+            display: block;
+            font-size: 2.5rem;
+            color: var(--accent);
             font-weight: bold;
+            margin: 20px 0;
         }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #e50914; border-radius: 10px; }
+
+        .speed { font-size: 1.2rem; color: #aaa; }
+
+        /* Daftar Situs di Bagian Bawah */
+        .site-container {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .site-button {
+            background: #2c2c2c;
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        .site-button:focus {
+            background: var(--accent);
+            color: black;
+            border-color: white;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark mb-4">
-    <div class="container">
-        <a class="navbar-brand" href="#"><strong>WIFI</strong> & TV Gadingan</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link active-page" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="tv.html">TV internasional</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://www.vidio.com/live/204-sctv" target="_blank">VIDEO</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="https://lobstertube.com" target="_blank">LobsterTube</a>
-                </li>
-            </ul>
+    <h1>PROMO INTERNET TV</h1>
+    <p class="subtitle">Gunakan tombol arah pada remote untuk memilih paket</p>
+
+    <div class="grid-container">
+        <div class="nav-item" tabindex="0">
+            <h2>PAKET HEMAT</h2>
+            <span class="speed">20 Mbps</span>
+            <span class="price">150rb</span>
+            <p>Cocok untuk Streaming HD</p>
+        </div>
+
+        <div class="nav-item" tabindex="0">
+            <h2>PAKET JOSS</h2>
+            <span class="speed">50 Mbps</span>
+            <span class="price">300rb</span>
+            <p>Lancar untuk 5 Perangkat</p>
+        </div>
+
+        <div class="nav-item" tabindex="0">
+            <h2>PAKET GAMER</h2>
+            <span class="speed">100 Mbps</span>
+            <span class="price">450rb</span>
+            <p>Ping Rendah & Stabil</p>
         </div>
     </div>
-</nav>
 
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 mb-4">
-            <div class="video-wrapper">
-                <div id="videoOverlay" onclick="startExperience()"></div>
-                <iframe id="mainPlayer" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-            </div>
-            <div class="mt-3">
-                <h3 id="channelTitle" style="color: #eee;">GPT</h3>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="channel-container">
-                <h5 class="mb-3">Daftar Saluran</h5>
-                <div class="channel-list" id="listContent">
-                    <div class="channel-item active" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=')">RCTI</div>
-                    <div class="channel-item" onclick="changeChannel('GTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">GTV</div>
-                    <div class="channel-item" onclick="changeChannel('MNCTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">MNCTV</div>
-                    <div class="channel-item" onclick="changeChannel('iNews', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">iNews</div>
-                    <div class="channel-item" onclick="changeChannel('TRANS7', 'https://20.detik.com/watch/livestreaming-trans7')">TRANS7</div>
-                    <div class="channel-item" onclick="changeChannel('TRANS TV', 'https://20.detik.com/watch/livestreaming-transtv')">TRANS TV</div>
-                    <div class="channel-item" onclick="changeChannel('CNN Indonesia', 'https://www.cnnindonesia.com/tv/embed?ref=transmedia')">CNN Indonesia</div>
-                    <div class="channel-item" onclick="changeChannel('CNBC Indonesia', 'https://www.cnbcindonesia.com/embed/tv?ref=transmedia')">CNBC Indonesia</div>
-                    <div class="channel-item" onclick="changeChannel('SCTV', 'https://www.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true&player_only=true')">SCTV</div>
-                    <div class="channel-item" onclick="changeChannel('Indosiar', 'https://www.vidio.com/live/205-indosiar-tv-stream/embed?autoplay=true&player_only=true')">Indosiar</div>
-                </div>
-            </div>
-        </div>
+    <div class="site-container">
+        <a href="https://fast.com" class="site-button" tabindex="0">Cek Speed</a>
+        <a href="https://youtube.com" class="site-button" tabindex="0">Buka YouTube</a>
+        <a href="#" class="site-button" tabindex="0">Hubungi Kami</a>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    let defaultUrl = "https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=";
-    let defaultName = "RCTI";
-
-    function startExperience() {
-        document.getElementById('videoOverlay').style.display = 'none';
-        loadChannel(defaultName, defaultUrl);
-    }
-
-    function changeChannel(name, url) {
-        const overlay = document.getElementById('videoOverlay');
-        if (overlay.style.display !== 'none') {
-            overlay.style.display = 'none';
-        }
-        loadChannel(name, url);
-    }
-
-    function loadChannel(name, url) {
-        const player = document.getElementById('mainPlayer');
-        let separator = url.includes('?') ? '&' : '?';
-        let finalUrl = `${url}${separator}autoplay=1&mute=0&muted=0&autoPlay=true`;
-
-        player.src = finalUrl;
-        document.getElementById('channelTitle').innerText = 'Sedang Menonton: ' + name;
-
-        const items = document.querySelectorAll('.channel-item');
-        items.forEach(item => {
-            item.classList.remove('active');
-            if(item.innerText.trim() === name) item.classList.add('active');
-        });
-    }
-</script>
+    <script>
+        // Script sederhana agar saat halaman dimuat, fokus langsung ke kartu pertama
+        window.onload = function() {
+            document.querySelector('.nav-item').focus();
+        };
+    </script>
 
 </body>
 </html>
