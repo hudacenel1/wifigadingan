@@ -1,46 +1,289 @@
-<script>
-document.addEventListener('keydown', (e) => {
-    const current = document.activeElement;
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WIFI GADINGAN - Internet Cepat & Stabil</title>
 
-    // Shortcut angka
-    if (e.key >= '1' && e.key <= '9') {
-        const ch = document.querySelector(`[data-channel-num="${e.key}"]`);
-        if (ch) {
-            ch.focus();
-            ch.click();
+    <style>
+        :root {
+            --primary: #007bff;
+            --secondary: #ffc107;
+            --dark: #333;
+            --light: #f4f4f4;
+            --success: #25d366;
         }
-        return;
-    }
 
-    // ENTER / OK
-    if (e.key === 'Enter') {
-        current?.click();
-        return;
-    }
-
-    // BACK
-    if (e.key === 'Backspace') {
-        window.history.back();
-        return;
-    }
-
-    // Navigasi grid channel
-    if (current?.classList.contains('channel-card')) {
-        const cards = [...document.querySelectorAll('.channel-card')];
-        const index = cards.indexOf(current);
-        const cols = 2;
-
-        let next = index;
-        if (e.key === 'ArrowRight') next++;
-        if (e.key === 'ArrowLeft') next--;
-        if (e.key === 'ArrowDown') next += cols;
-        if (e.key === 'ArrowUp') next -= cols;
-
-        if (cards[next]) {
-            cards[next].focus();
-            cards[next].scrollIntoView({ block: 'center' });
-            e.preventDefault();
+        * {
+            box-sizing: border-box;
         }
-    }
-});
-</script>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* ===== NAVIGASI ATAS ===== */
+        .top-nav {
+            background: white;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .btn-back {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .btn-back::before {
+            content: '←';
+            margin-right: 8px;
+            font-size: 1.3rem;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            margin-top: 10px;
+            opacity: 0.95;
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 900px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
+        }
+
+        /* ===== PROMO ===== */
+        .promo-banner {
+            background: var(--secondary);
+            color: #000;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .promo-banner span {
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        /* ===== PAKET ===== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .price-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .price-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .price-card h3 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .speed {
+            background: #e7f1ff;
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* ===== WHATSAPP ===== */
+        .btn-whatsapp {
+            display: block;
+            background: var(--success);
+            color: white;
+            text-align: center;
+            padding: 1.3rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 2.5rem;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-nav {
+            text-align: center;
+            margin-top: 30px;
+            padding-bottom: 40px;
+        }
+
+        .btn-outline-back {
+            display: inline-block;
+            padding: 12px 28px;
+            border: 2px solid #ccc;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #666;
+            transition: 0.3s;
+        }
+
+        .btn-outline-back:hover {
+            background: #eee;
+        }
+
+        /* ===== OPTIMASI MOBILE ===== */
+        @media (max-width: 600px) {
+
+            body {
+                font-size: 15px;
+            }
+
+            header {
+                padding: 2.2rem 1rem;
+            }
+
+            header h1 {
+                font-size: 1.9rem;
+            }
+
+            .container {
+                margin-top: -25px;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .price-card {
+                padding: 1.5rem;
+            }
+
+            .price-card:hover {
+                transform: none;
+            }
+
+            .price {
+                font-size: 2.1rem;
+            }
+
+            .btn-whatsapp {
+                position: fixed;
+                bottom: 15px;
+                left: 15px;
+                right: 15px;
+                z-index: 999;
+                padding: 1.1rem;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            }
+
+            .footer-nav {
+                margin-bottom: 90px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV ATAS -->
+    <nav class="top-nav">
+        <a href="javascript:history.back()" class="btn-back">Kembali</a>
+    </nav>
+
+    <!-- HEADER -->
+    <header>
+        <h1>WIFI GADINGAN</h1>
+        <p>Internet Cepat, Stabil, dan Tanpa Batas!</p>
+    </header>
+
+    <!-- ISI -->
+    <div class="container">
+
+        <div class="promo-banner">
+            🔥 PROMO SPESIAL: GRATIS BIAYA PEMASANGAN 🔥<br>
+            <span>(Untuk paket Rp 100.000 ke atas)</span>
+        </div>
+
+        <div class="pricing-grid">
+
+            <div class="price-card">
+                <h3>Hemat</h3>
+                <div class="price">Rp 60.000</div>
+                <div class="speed">3 Mbps</div>
+            </div>
+
+            <div class="price-card">
+                <h3>Regular</h3>
+                <div class="price">Rp 80.000</div>
+                <div class="speed">4 Mbps</div>
+            </div>
+
+            <div class="price-card" style="border-top-color:#ff4757;">
+                <h3 style="color:#ff4757;">Best Seller</h3>
+                <div class="price">Rp 100.000</div>
+                <div class="speed">5 Mbps</div>
+            </div>
+
+            <div class="price-card">
+                <h3>Super</h3>
+                <div class="price">Rp 150.000</div>
+                <div class="speed">10 Mbps</div>
+            </div>
+
+        </div>
+
+        <a href="https://wa.me/6289632950308" class="btn-whatsapp">
+            📲 HUBUNGI KAMI VIA WHATSAPP
+        </a>
+
+        <div class="footer-nav">
+            <a href="index.html" class="btn-outline-back">Kembali ke Beranda</a>
+        </div>
+
+    </div>
+
+</body>
+</html>
