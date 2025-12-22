@@ -1,289 +1,214 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WIFI GADINGAN - Internet Cepat & Stabil</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TV GADINGAN HLS</title>
 
-    <style>
-        :root {
-            --primary: #007bff;
-            --secondary: #ffc107;
-            --dark: #333;
-            --light: #f4f4f4;
-            --success: #25d366;
-        }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-        }
-
-        /* ===== NAVIGASI ATAS ===== */
-        .top-nav {
-            background: white;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .btn-back {
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            font-size: 1rem;
-        }
-
-        .btn-back::before {
-            content: '←';
-            margin-right: 8px;
-            font-size: 1.3rem;
-        }
-
-        /* ===== HEADER ===== */
-        header {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            text-align: center;
-            padding: 3rem 1rem;
-        }
-
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-        }
-
-        header p {
-            margin-top: 10px;
-            opacity: 0.95;
-        }
-
-        /* ===== CONTAINER ===== */
-        .container {
-            max-width: 900px;
-            margin: -40px auto 40px;
-            padding: 0 20px;
-        }
-
-        /* ===== PROMO ===== */
-        .promo-banner {
-            background: var(--secondary);
-            color: #000;
-            padding: 1.5rem;
-            border-radius: 12px;
-            text-align: center;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .promo-banner span {
-            font-size: 0.9rem;
-            font-weight: normal;
-        }
-
-        /* ===== PAKET ===== */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .price-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 14px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-top: 5px solid var(--primary);
-            transition: transform 0.3s ease;
-        }
-
-        .price-card:hover {
-            transform: translateY(-8px);
-        }
-
-        .price-card h3 {
-            margin: 0;
-            color: var(--primary);
-        }
-
-        .price {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 1rem 0;
-        }
-
-        .speed {
-            background: #e7f1ff;
-            color: var(--primary);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
-        /* ===== WHATSAPP ===== */
-        .btn-whatsapp {
-            display: block;
-            background: var(--success);
-            color: white;
-            text-align: center;
-            padding: 1.3rem;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-top: 2.5rem;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer-nav {
-            text-align: center;
-            margin-top: 30px;
-            padding-bottom: 40px;
-        }
-
-        .btn-outline-back {
-            display: inline-block;
-            padding: 12px 28px;
-            border: 2px solid #ccc;
-            border-radius: 30px;
-            text-decoration: none;
-            color: #666;
-            transition: 0.3s;
-        }
-
-        .btn-outline-back:hover {
-            background: #eee;
-        }
-
-        /* ===== OPTIMASI MOBILE ===== */
-        @media (max-width: 600px) {
-
-            body {
-                font-size: 15px;
-            }
-
-            header {
-                padding: 2.2rem 1rem;
-            }
-
-            header h1 {
-                font-size: 1.9rem;
-            }
-
-            .container {
-                margin-top: -25px;
-            }
-
-            .pricing-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .price-card {
-                padding: 1.5rem;
-            }
-
-            .price-card:hover {
-                transform: none;
-            }
-
-            .price {
-                font-size: 2.1rem;
-            }
-
-            .btn-whatsapp {
-                position: fixed;
-                bottom: 15px;
-                left: 15px;
-                right: 15px;
-                z-index: 999;
-                padding: 1.1rem;
-                box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-            }
-
-            .footer-nav {
-                margin-bottom: 90px;
-            }
-        }
-    </style>
+<style>
+:root{
+  --primary:#007bff;
+  --focus:#ffc107;
+}
+body{
+  background:#f0f2f5;
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  font-family:Segoe UI;
+}
+.container-fluid{
+  max-width:1600px;
+  background:#fff;
+  padding:25px;
+  border-radius:20px;
+  box-shadow:0 10px 40px rgba(0,0,0,.2);
+}
+.video-wrapper{
+  position:relative;
+  border-radius:15px;
+  overflow:hidden;
+  background:black;
+}
+video{
+  width:100%;
+  height:100%;
+  max-height:70vh;
+  background:black;
+}
+#overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.85);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  cursor:pointer;
+  z-index:10;
+}
+.channel-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+  max-height:70vh;
+  overflow-y:auto;
+}
+.channel-card{
+  border:4px solid #e9ecef;
+  border-radius:15px;
+  padding:15px;
+  text-align:center;
+  cursor:pointer;
+}
+.channel-card:focus{
+  outline:none;
+  border-color:var(--focus);
+  background:var(--primary);
+  color:white;
+  transform:scale(1.05);
+}
+.channel-card img{
+  width:100px;
+  height:60px;
+  object-fit:contain;
+}
+#notify{
+  position:absolute;
+  top:30px;
+  right:30px;
+  font-size:4rem;
+  background:black;
+  color:var(--focus);
+  padding:10px 30px;
+  border-radius:15px;
+  display:none;
+  border:4px solid var(--focus);
+}
+::-webkit-scrollbar{width:0}
+</style>
 </head>
 
 <body>
 
-    <!-- NAV ATAS -->
-    <nav class="top-nav">
-        <a href="javascript:history.back()" class="btn-back">Kembali</a>
-    </nav>
+<div id="notify">01</div>
 
-    <!-- HEADER -->
-    <header>
-        <h1>WIFI GADINGAN</h1>
-        <p>Internet Cepat, Stabil, dan Tanpa Batas!</p>
-    </header>
+<div class="container-fluid">
+<div class="row">
 
-    <!-- ISI -->
-    <div class="container">
+<!-- PLAYER -->
+<div class="col-lg-7">
+<div class="video-wrapper">
+<div id="overlay" tabindex="1" onclick="startTV()">
+<h1>TV GADINGAN</h1>
+<p>Tekan OK / Enter</p>
+</div>
+<video id="player" controls autoplay></video>
+</div>
+<h3 id="title" class="mt-3 text-primary">Pilih Saluran</h3>
+</div>
 
-        <div class="promo-banner">
-            🔥 PROMO SPESIAL: GRATIS BIAYA PEMASANGAN 🔥<br>
-            <span>(Untuk paket Rp 100.000 ke atas)</span>
-        </div>
+<!-- CHANNEL LIST -->
+<div class="col-lg-5">
+<h4 class="fw-bold mb-3">DAFTAR CHANNEL</h4>
 
-        <div class="pricing-grid">
+<div class="channel-grid">
 
-            <div class="price-card">
-                <h3>Hemat</h3>
-                <div class="price">Rp 60.000</div>
-                <div class="speed">3 Mbps</div>
-            </div>
+<div class="channel-card" tabindex="2"
+ data-num="1"
+ onclick="playChannel('RCTI','https://example.com/rcti.m3u8')">
+<img src="logotv/rcti.jpg">
+<div>1. RCTI</div>
+</div>
 
-            <div class="price-card">
-                <h3>Regular</h3>
-                <div class="price">Rp 80.000</div>
-                <div class="speed">4 Mbps</div>
-            </div>
+<div class="channel-card" tabindex="3"
+ data-num="2"
+ onclick="playChannel('GTV','https://example.com/gtv.m3u8')">
+<img src="logotv/gtv.jpg">
+<div>2. GTV</div>
+</div>
 
-            <div class="price-card" style="border-top-color:#ff4757;">
-                <h3 style="color:#ff4757;">Best Seller</h3>
-                <div class="price">Rp 100.000</div>
-                <div class="speed">5 Mbps</div>
-            </div>
+<div class="channel-card" tabindex="4"
+ data-num="3"
+ onclick="playChannel('MNCTV','https://example.com/mnctv.m3u8')">
+<img src="logotv/mnctv.jpg">
+<div>3. MNCTV</div>
+</div>
 
-            <div class="price-card">
-                <h3>Super</h3>
-                <div class="price">Rp 150.000</div>
-                <div class="speed">10 Mbps</div>
-            </div>
+<div class="channel-card" tabindex="5"
+ data-num="4"
+ onclick="playChannel('iNews','https://example.com/inews.m3u8')">
+<img src="logotv/inewtv.jpg">
+<div>4. iNews</div>
+</div>
 
-        </div>
+</div>
+</div>
 
-        <a href="https://wa.me/6289632950308" class="btn-whatsapp">
-            📲 HUBUNGI KAMI VIA WHATSAPP
-        </a>
+</div>
+</div>
 
-        <div class="footer-nav">
-            <a href="index.html" class="btn-outline-back">Kembali ke Beranda</a>
-        </div>
+<script>
+let hls;
+const video = document.getElementById('player');
 
-    </div>
+function showNotify(num){
+  const n=document.getElementById('notify');
+  n.innerText=num.toString().padStart(2,'0');
+  n.style.display='block';
+  setTimeout(()=>n.style.display='none',2000);
+}
+
+function playChannel(name,url){
+  document.getElementById('overlay').style.display='none';
+  document.getElementById('title').innerText='Menonton: '+name;
+
+  if(hls){hls.destroy();}
+
+  if(video.canPlayType('application/vnd.apple.mpegurl')){
+    video.src=url;
+  }else{
+    hls=new Hls();
+    hls.loadSource(url);
+    hls.attachMedia(video);
+  }
+  video.play();
+}
+
+function startTV(){
+  const first=document.querySelector('.channel-card');
+  first.focus();
+  first.click();
+}
+
+document.addEventListener('keydown',e=>{
+  const items=[document.getElementById('overlay'),...document.querySelectorAll('.channel-card')];
+  let i=items.indexOf(document.activeElement);
+
+  if(e.key>='1'&&e.key<='9'){
+    const t=document.querySelector(`[data-num="${e.key}"]`);
+    if(t){t.focus();t.click();showNotify(e.key);}
+    return;
+  }
+
+  if(e.key==='ArrowDown') i+=2;
+  if(e.key==='ArrowUp') i-=2;
+  if(e.key==='ArrowRight') i++;
+  if(e.key==='ArrowLeft') i--;
+  if(e.key==='Enter') document.activeElement.click();
+
+  if(items[i]){items[i].focus();e.preventDefault();}
+});
+
+window.onload=()=>document.getElementById('overlay').focus();
+</script>
 
 </body>
 </html>
