@@ -3,220 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WIFIGadingan TV - Desain Cerah</title>
+    <title>WIFIGadingan Smart TV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #007bff; /* Biru terang */
-            --secondary-color: #f8f9fa; /* Latar belakang terang */
-            --text-color-dark: #343a40; /* Teks gelap */
-            --text-color-light: #ffffff; /* Teks terang */
-            --card-bg: #ffffff; /* Latar belakang kartu */
-            --focus-border: #28a745; /* Border fokus hijau */
-            --active-bg: #e2e6ea; /* Latar belakang aktif abu-abu terang */
+            --primary-color: #007bff;
+            --bg-color: #f0f2f5;
+            --text-dark: #212529;
+            --focus-border: #ffc107; /* Kuning Emas agar kontras di TV */
         }
 
         body { 
-            background-color: var(--secondary-color); 
-            color: var(--text-color-dark); 
-            font-family: 'Poppins', sans-serif; /* Font modern */
+            background-color: var(--bg-color); 
+            color: var(--text-dark); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden; 
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh; /* Pastikan tinggi halaman minimal 100% viewport */
+            margin: 0; padding: 0;
+            height: 100vh;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .container-fluid {
-            background-color: #ffffff; /* Latar putih untuk kontainer utama */
+            max-width: 1600px;
+            background: white;
+            padding: 25px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            max-width: 1400px; /* Lebar maksimal agar tidak terlalu lebar di layar besar */
-            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
 
-        .btn-back { 
-            background: var(--primary-color); 
-            color: var(--text-color-light); 
-            border-radius: 8px; 
-            padding: 12px 30px; 
-            text-decoration: none; 
-            border: 3px solid transparent;
-            font-weight: 600; /* Lebih tebal */
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
-        }
-        .btn-back:hover {
-            background: #0056b3;
-            color: var(--text-color-light);
-            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3);
-        }
-
+        /* --- VIDEO PLAYER --- */
         .video-wrapper {
             position: relative;
             padding-bottom: 56.25%;
-            background: #e9ecef; /* Latar belakang abu-abu terang */
+            background: #000;
             border-radius: 15px;
             overflow: hidden;
-            border: 2px solid #ced4da; /* Border abu-abu */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 4px solid #dee2e6;
         }
         iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
-        .channel-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Sesuaikan ukuran kartu */
-            gap: 15px;
-            padding: 20px 0; /* Padding vertikal saja */
-            max-height: 600px; /* Tinggi maksimal daftar channel */
-            overflow-y: auto;
-            align-content: flex-start; /* Merapikan item ke atas */
-        }
-
-        .channel-card {
-            background: var(--card-bg);
-            padding: 20px 10px;
-            text-align: center;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 3px solid #e0e0e0; /* Border abu-abu lebih terang */
-            font-weight: 500;
-            font-size: 1.1rem;
-            color: var(--text-color-dark);
-            transition: all 0.2s ease;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        }
-        .channel-card:hover {
-            background: var(--active-bg);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
-        }
-
-        /* EFEK FOKUS REMOTE TV */
-        .channel-card:focus, .btn-back:focus, #videoOverlay:focus {
-            outline: none;
-            border-color: var(--focus-border); /* Border hijau terang */
-            background-color: #d4edda; /* Latar belakang hijau sangat terang */
-            transform: scale(1.08); /* Pembesaran sedikit lebih kecil */
-            z-index: 10;
-            box-shadow: 0 0 15px rgba(40, 167, 69, 0.6); /* Shadow hijau */
-            color: var(--text-color-dark); /* Pastikan teks tetap gelap */
-        }
-
         #videoOverlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.9) url('gpt.png') no-repeat center; /* Latar putih transparan */
-            background-size: contain; /* Sesuaikan ukuran gambar */
-            display: flex; justify-content: center; align-items: center;
-            z-index: 100; cursor: pointer;
-            border-radius: 15px; /* Sesuaikan border-radius dengan video-wrapper */
+            background: rgba(0, 0, 0, 0.85) url('https://www.transparenttextures.com/patterns/black-linen.png');
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100; cursor: pointer; color: white;
         }
-        #videoOverlay h2 {
-            background-color: rgba(0, 0, 0, 0.7); /* Latar belakang hitam transparan untuk teks */
+
+        /* --- OSD NOTIFICATION --- */
+        #channelNotify {
+            position: absolute; top: 30px; right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--focus-border);
+            padding: 15px 35px;
+            border-radius: 12px;
+            font-size: 4rem; font-weight: bold;
+            display: none; z-index: 1000;
+            border: 4px solid var(--focus-border);
+        }
+
+        /* --- CHANNEL GRID --- */
+        .channel-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 Kolom untuk Remote TV */
+            gap: 15px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+            scroll-behavior: smooth;
+        }
+
+        /* --- CHANNEL CARD --- */
+        .channel-card {
+            background: #fff;
+            padding: 20px 10px;
+            text-align: center;
+            border-radius: 15px;
+            border: 4px solid #e9ecef;
+            display: flex; flex-direction: column; align-items: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .channel-logo {
+            width: 100px; height: 60px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .channel-name { font-weight: bold; font-size: 1.1rem; color: #333; }
+
+        /* --- FOCUS STATE (PENTING UNTUK REMOTE) --- */
+        .channel-card:focus, .btn-back:focus, #videoOverlay:focus {
+            outline: none;
+            border-color: var(--focus-border) !important;
+            background-color: var(--primary-color) !important;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 193, 7, 0.6);
+        }
+
+        .channel-card:focus .channel-name { color: white; }
+
+        .active-watching {
+            background-color: #d1e7dd !important;
+            border-color: #198754 !important;
+        }
+
+        /* Sembunyikan Scrollbar */
+        ::-webkit-scrollbar { width: 0; }
+        
+        .btn-back {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #6c757d;
             color: white;
-            padding: 15px 30px;
+            text-decoration: none;
             border-radius: 10px;
-            font-size: 1.8rem;
-        }
-
-        /* Sembunyikan scrollbar agar bersih di TV */
-        ::-webkit-scrollbar { width: 0; background: transparent; }
-        ::-webkit-scrollbar-thumb { background: transparent; }
-
-        /* Responsif untuk layar lebih kecil */
-        @media (max-width: 992px) {
-            .channel-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-                max-height: 300px; /* Kurangi tinggi di layar kecil */
-            }
-            .channel-card {
-                font-size: 0.9rem;
-                padding: 15px 5px;
-            }
-            .container-fluid {
-                padding: 20px;
-            }
+            margin-bottom: 20px;
+            border: 4px solid transparent;
         }
     </style>
 </head>
 <body>
 
+<div id="channelNotify">01</div>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-7">
-            <a href="index.html" class="btn-back d-inline-block mb-4" tabindex="1">← KEMBALI KE BERANDA</a>
+            <a href="index.html" class="btn-back">← KEMBALI</a>
             
             <div class="video-wrapper">
-                <div id="videoOverlay" tabindex="2" onclick="startExperience()">
-                    <h2>TEKAN OK UNTUK TONTON</h2>
+                <div id="videoOverlay" tabindex="1" onclick="startExperience()">
+                    <h1 style="font-size: 3rem;">TV GADINGAN</h1>
+                    <p>Tekan OK/Enter untuk Menonton</p>
                 </div>
-                <iframe id="mainPlayer" src="" allow="autoplay; fullscreen"></iframe>
+                <iframe id="mainPlayer"  src="logo/gpt.png" allow="autoplay; fullscreen"></iframe>
             </div>
-            <h2 id="channelTitle" class="mt-4 text-primary">Pilih Saluran Favoritmu...</h2>
+            <h2 id="channelTitle" class="mt-4 text-primary fw-bold">Pilih Saluran...</h2>
         </div>
 
         <div class="col-lg-5">
-            <h4 class="mb-3 px-3 fw-bold text-dark">DAFTAR SALURAN</h4>
+            <h4 class="mb-3 fw-bold">DAFTAR SALURAN (Gunakan Panah Remote)</h4>
             <div class="channel-grid" id="gridContent">
-                <div class="channel-card" tabindex="3" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=')">RCTI</div>
-                <div class="channel-card" tabindex="4" onclick="changeChannel('GTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">GTV</div>
-                <div class="channel-card" tabindex="5" onclick="changeChannel('MNCTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">MNCTV</div>
-                <div class="channel-card" tabindex="6" onclick="changeChannel('iNews', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">iNews TV</div>
-                <div class="channel-card" tabindex="7" onclick="changeChannel('TRANS7', 'https://20.detik.com/watch/livestreaming-trans7')">TRANS 7</div>
-                <div class="channel-card" tabindex="8" onclick="changeChannel('TRANS TV', 'https://20.detik.com/watch/livestreaming-transtv')">TRANS TV</div>
-                <div class="channel-card" tabindex="9" onclick="changeChannel('CNN Indonesia', 'https://www.cnnindonesia.com/tv/embed?ref=transmedia')">CNN Indonesia</div>
-                <div class="channel-card" tabindex="10" onclick="changeChannel('CNBC Indonesia', 'https://www.cnbcindonesia.com/embed/tv?ref=transmedia')">CNBC Indonesia</div>
-                <div class="channel-card" tabindex="11" onclick="changeChannel('SCTV', 'https://www.vidio.com/live/204-sctv-tv-stream/embed?autoplay=true')">SCTV</div>
-                <div class="channel-card" tabindex="12" onclick="changeChannel('Indosiar', 'https://www.vidio.com/live/205-indosiar-tv-stream/embed?autoplay=true')">INDOSIAR</div>
-                <div class="channel-card" tabindex="13" onclick="changeChannel('TVRI Nasional', 'https://m.vidio.com/live/667-tvri')">TVRI Nasional</div>
-                <div class="channel-card" tabindex="14" onclick="changeChannel('Kompas TV', 'https://live.kompas.tv/embed')">Kompas TV</div>
+                
+                <div class="channel-card" tabindex="2" data-channel-num="1" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=')">
+                    <img src="logotv/rcti.jpg" class="rcti">
+                    <div class="channel-name">1. RCTI</div>
                 </div>
+
+                <div class="channel-card" tabindex="3" data-channel-num="2" onclick="changeChannel('GTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">
+                    <img src="logotv/gtv.jpg" class="gtv">
+                    <div class="channel-name">2. GTV</div>
+                </div>
+
+                <div class="channel-card" tabindex="4" data-channel-num="3" onclick="changeChannel('MNCTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">
+                    <img src="logotv/mnctv.jpg" class="mnc">
+                    <div class="channel-name">3. MNCTV</div>
+                </div>
+
+                <div class="channel-card" tabindex="5" data-channel-num="4" onclick="changeChannel('iNews', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">
+                    <img src="logotv/inewtv.jpg" class="inewtv">
+                    <div class="channel-name">4. iNews TV</div>
+                </div>
+
+                <div class="channel-card" tabindex="6" data-channel-num="5" onclick="changeChannel('TRANS7', 'https://20.detik.com/watch/livestreaming-trans7')">
+                    <img src="logotv/trans7.jpg" class="trans7">
+                    <div class="channel-name">5. TRANS 7</div>
+                </div>
+
+                <div class="channel-card" tabindex="7" data-channel-num="6" onclick="changeChannel('TRANS TV', 'https://20.detik.com/watch/livestreaming-transtv')">
+                    <img src="logotv/transtv.jpg" class="trantv">
+                    <div class="channel-name">6. TRANS TV</div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
 <script>
+    let notifyTimeout;
+
+    // Fungsi Notifikasi Nomor Saluran
+    function showNotification(num) {
+        const notifyEl = document.getElementById('channelNotify');
+        notifyEl.innerText = num.toString().padStart(2, '0');
+        notifyEl.style.display = 'block';
+        notifyEl.style.opacity = '1';
+        clearTimeout(notifyTimeout);
+        notifyTimeout = setTimeout(() => {
+            notifyEl.style.opacity = '0';
+            setTimeout(() => { notifyEl.style.display = 'none'; }, 500);
+        }, 2000);
+    }
+
+    // Navigasi Remote
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            const activeEl = document.activeElement;
-            if (activeEl) activeEl.click();
-        } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-            // Untuk memastikan scroll otomatis pada channel-grid
-            const focusedCard = document.activeElement;
-            if (focusedCard && focusedCard.classList.contains('channel-card')) {
-                focusedCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        const focusables = Array.from(document.querySelectorAll('.btn-back, #videoOverlay, .channel-card'));
+        let index = focusables.indexOf(document.activeElement);
+
+        // Shortcut Tombol Angka (1-9)
+        if (e.key >= '1' && e.key <= '9') {
+            const target = document.querySelector(`[data-channel-num="${e.key}"]`);
+            if (target) {
+                target.focus();
+                target.click();
             }
+            return;
+        }
+
+        let nextIndex;
+        const cols = 2; // Karena grid kita pakai 2 kolom
+
+        switch (e.key) {
+            case 'ArrowRight': nextIndex = index + 1; break;
+            case 'ArrowLeft':  nextIndex = index - 1; break;
+            case 'ArrowDown':  nextIndex = index + cols; break;
+            case 'ArrowUp':    nextIndex = index - cols; break;
+            case 'Enter':
+                if (document.activeElement) document.activeElement.click();
+                return;
+            case 'Backspace': 
+                window.history.back(); 
+                return;
+            default: return;
+        }
+
+        if (nextIndex >= 0 && nextIndex < focusables.length) {
+            focusables[nextIndex].focus();
+            e.preventDefault();
+        }
+
+        // Scroll otomatis daftar channel
+        const active = document.activeElement;
+        if (active.classList.contains('channel-card')) {
+            active.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
-
-    function startExperience() {
-        document.getElementById('videoOverlay').style.display = 'none';
-        changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=');
-        document.getElementById('mainPlayer').focus(); // Fokus ke player setelah overlay hilang
-    }
 
     function changeChannel(name, url) {
         document.getElementById('videoOverlay').style.display = 'none';
         const player = document.getElementById('mainPlayer');
-        // Pastikan autoplay dan fullscreen
-        player.src = url + (url.includes('?') ? '&' : '?') + "autoplay=1&fullscreen=1";
+        const separator = url.includes('?') ? '&' : '?';
+        
+        player.src = url + separator + "autoplay=1";
         document.getElementById('channelTitle').innerText = "Menonton: " + name;
 
-        // Update active class (jika diperlukan untuk indikator visual lain)
-        document.querySelectorAll('.channel-card').forEach(card => {
-            card.classList.remove('active');
-        });
-        const currentCard = Array.from(document.querySelectorAll('.channel-card')).find(card => card.innerText.trim() === name);
-        if (currentCard) {
-            currentCard.classList.add('active');
+        // Update UI Active
+        document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active-watching'));
+        const current = Array.from(document.querySelectorAll('.channel-card')).find(c => c.innerText.includes(name));
+        if (current) {
+            current.classList.add('active-watching');
+            showNotification(current.getAttribute('data-channel-num'));
         }
     }
 
-    // Set fokus awal ke tombol kembali saat web dibuka
+    function startExperience() {
+        document.getElementById('videoOverlay').style.display = 'none';
+        const first = document.querySelector('.channel-card');
+        if (first) {
+            first.focus();
+            first.click();
+        }
+    }
+
     window.onload = () => {
-        document.querySelector('.btn-back').focus();
+        document.getElementById('videoOverlay').focus();
     };
 </script>
 
