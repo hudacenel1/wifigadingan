@@ -146,7 +146,7 @@
             <h4 class="mb-3 fw-bold">DAFTAR SALURAN (Gunakan Panah Remote)</h4>
             <div class="channel-grid" id="gridContent">
                 
-                <div class="channel-card" tabindex="2" data-channel-num="1" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=')">
+                <div class="channel-card" tabindex="2" data-channel-num="1" onclick="changeChannel('RCTI', ':sout=#transcode{vcodec=h264,vb=56,venc=x264{profile=baseline},fps=12,scale=Auto,width=176,height=144,acodec=mp3,ab=24,channels=1,samplerate=44100,scodec=none}:http{mux=ffmpeg{mux=flv},dst=:8080/} :no-sout-all :sout-keep">
                     <img src="rcti.jpg" class="rcti">
                     <div class="channel-name">1. RCTI</div>
                 </div>
