@@ -10,15 +10,14 @@
             --primary-color: #007bff;
             --bg-color: #f0f2f5;
             --text-dark: #212529;
-            --focus-border: #ffc107; /* Kuning Emas agar kontras di TV */
+            --focus-border: #ffc107;
         }
 
         body { 
             background-color: var(--bg-color); 
             color: var(--text-dark); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             overflow: hidden; 
-            margin: 0; padding: 0;
             height: 100vh;
             display: flex; align-items: center; justify-content: center;
         }
@@ -26,7 +25,7 @@
         .container-fluid {
             max-width: 1600px;
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
@@ -44,63 +43,56 @@
 
         #videoOverlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85) url('https://www.transparenttextures.com/patterns/black-linen.png');
+            background: rgba(0, 0, 0, 0.9);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 100; cursor: pointer; color: white;
         }
 
-        /* --- OSD NOTIFICATION --- */
-        #channelNotify {
-            position: absolute; top: 30px; right: 30px;
-            background: rgba(0, 0, 0, 0.9);
-            color: var(--focus-border);
-            padding: 15px 35px;
-            border-radius: 12px;
-            font-size: 4rem; font-weight: bold;
-            display: none; z-index: 1000;
-            border: 4px solid var(--focus-border);
-        }
-
-        /* --- CHANNEL GRID --- */
+        /* --- CHANNEL GRID (3 KOLOM) --- */
         .channel-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 Kolom untuk Remote TV */
-            gap: 15px;
-            max-height: 70vh;
+            grid-template-columns: repeat(3, 1fr); /* 3 Kolom */
+            gap: 10px;
+            max-height: 75vh;
             overflow-y: auto;
-            padding-right: 10px;
-            scroll-behavior: smooth;
+            padding: 5px;
         }
 
-        /* --- CHANNEL CARD --- */
+        /* --- CHANNEL CARD KECIL --- */
         .channel-card {
-            background: #fff;
-            padding: 20px 10px;
+            background: #f8f9fa;
+            padding: 10px 5px;
             text-align: center;
-            border-radius: 15px;
-            border: 4px solid #e9ecef;
+            border-radius: 12px;
+            border: 3px solid #e9ecef;
             display: flex; flex-direction: column; align-items: center;
             transition: all 0.2s;
             cursor: pointer;
         }
 
         .channel-logo {
-            width: 100px; height: 60px;
+            width: 50px; /* Ukuran icon kecil */
+            height: 35px;
             object-fit: contain;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
-        .channel-name { font-weight: bold; font-size: 1.1rem; color: #333; }
+        .channel-name { 
+            font-weight: bold; 
+            font-size: 0.75rem; /* Font kecil agar pas 3 kolom */
+            color: #333; 
+            white-space: nowrap;
+            overflow: hidden;
+        }
 
-        /* --- FOCUS STATE (PENTING UNTUK REMOTE) --- */
-        .channel-card:focus, .btn-back:focus, #videoOverlay:focus {
+        /* FOCUS STATE */
+        .channel-card:focus, #videoOverlay:focus {
             outline: none;
             border-color: var(--focus-border) !important;
             background-color: var(--primary-color) !important;
-            transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(255, 193, 7, 0.6);
+            transform: scale(1.08);
+            z-index: 10;
         }
-
         .channel-card:focus .channel-name { color: white; }
 
         .active-watching {
@@ -108,19 +100,18 @@
             border-color: #198754 !important;
         }
 
-        /* Sembunyikan Scrollbar */
-        ::-webkit-scrollbar { width: 0; }
-        
-        .btn-back {
-            display: inline-block;
-            padding: 12px 25px;
-            background: #6c757d;
-            color: white;
-            text-decoration: none;
+        #channelNotify {
+            position: absolute; top: 30px; right: 30px;
+            background: rgba(0, 0, 0, 0.9);
+            color: var(--focus-border);
+            padding: 10px 25px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            border: 4px solid transparent;
+            font-size: 3rem; font-weight: bold;
+            display: none; z-index: 1000;
+            border: 3px solid var(--focus-border);
         }
+
+        ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body>
@@ -130,50 +121,48 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-7">
-            <a href="index.html" class="btn-back">← KEMBALI</a>
-            
             <div class="video-wrapper">
                 <div id="videoOverlay" tabindex="1" onclick="startExperience()">
-                    <h1 style="font-size: 3rem;">TV GADINGAN</h1>
-                    <p>Tekan OK/Enter untuk Menonton</p>
+                    <h1>TV GADINGAN</h1>
+                    <p>Tekan OK untuk Mulai</p>
                 </div>
-                <iframe id="mainPlayer"  src="logo/gpt.png" allow="autoplay; fullscreen"></iframe>
+                <iframe id="mainPlayer" src="" allow="autoplay; fullscreen"></iframe>
             </div>
-            <h2 id="channelTitle" class="mt-4 text-primary fw-bold">Pilih Saluran...</h2>
+            <h3 id="channelTitle" class="mt-3 text-primary fw-bold">Pilih Saluran...</h3>
         </div>
 
         <div class="col-lg-5">
-            <h4 class="mb-3 fw-bold">DAFTAR SALURAN (Gunakan Panah Remote)</h4>
+            <h5 class="mb-3 fw-bold">DAFTAR SALURAN</h5>
             <div class="channel-grid" id="gridContent">
                 
-                <div class="channel-card" tabindex="2" data-channel-num="1" onclick="changeChannel('RCTI', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=">
-                    <img src="rcti.jpg" class="rcti">
+                <div class="channel-card" tabindex="2" data-channel-num="1" onclick="changeChannel('RCTI', 'URL_DISINI')">
+                    <img src="rcti.jpg" class="channel-logo">
                     <div class="channel-name">1. RCTI</div>
                 </div>
 
-                <div class="channel-card" tabindex="3" data-channel-num="2" onclick="changeChannel('GTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">
-                    <img src="gtv.jpg" class="gtv">
+                <div class="channel-card" tabindex="3" data-channel-num="2" onclick="changeChannel('GTV', 'URL_DISINI')">
+                    <img src="gtv.jpg" class="channel-logo">
                     <div class="channel-name">2. GTV</div>
                 </div>
 
-                <div class="channel-card" tabindex="4" data-channel-num="3" onclick="changeChannel('MNCTV', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">
-                    <img src="mnctv.jpg" class="mnc">
+                <div class="channel-card" tabindex="4" data-channel-num="3" onclick="changeChannel('MNCTV', 'URL_DISINI')">
+                    <img src="mnctv.jpg" class="channel-logo">
                     <div class="channel-name">3. MNCTV</div>
                 </div>
 
-                <div class="channel-card" tabindex="5" data-channel-num="4" onclick="changeChannel('iNews', 'https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">
-                    <img src="inewtv.jpg" class="inewtv">
-                    <div class="channel-name">4. iNews TV</div>
+                <div class="channel-card" tabindex="5" data-channel-num="4" onclick="changeChannel('iNews', 'URL_DISINI')">
+                    <img src="inewtv.jpg" class="channel-logo">
+                    <div class="channel-name">4. iNews</div>
                 </div>
 
-                <div class="channel-card" tabindex="6" data-channel-num="5" onclick="changeChannel('TRANS7', 'https://20.detik.com/watch/livestreaming-trans7')">
-                    <img src="trans7.jpg" class="trans7">
-                    <div class="channel-name">5. TRANS 7</div>
+                <div class="channel-card" tabindex="6" data-channel-num="5" onclick="changeChannel('TRANS7', 'URL_DISINI')">
+                    <img src="trans7.jpg" class="channel-logo">
+                    <div class="channel-name">5. TRANS7</div>
                 </div>
 
-                <div class="channel-card" tabindex="7" data-channel-num="6" onclick="changeChannel('TRANS TV', 'https://20.detik.com/watch/livestreaming-transtv')">
-                    <img src="transtv.jpg" class="trantv">
-                    <div class="channel-name">6. TRANS TV</div>
+                <div class="channel-card" tabindex="7" data-channel-num="6" onclick="changeChannel('TRANS TV', 'URL_DISINI')">
+                    <img src="transtv.jpg" class="channel-logo">
+                    <div class="channel-name">6. TRANSTV</div>
                 </div>
 
             </div>
@@ -184,48 +173,26 @@
 <script>
     let notifyTimeout;
 
-    // Fungsi Notifikasi Nomor Saluran
     function showNotification(num) {
         const notifyEl = document.getElementById('channelNotify');
         notifyEl.innerText = num.toString().padStart(2, '0');
         notifyEl.style.display = 'block';
-        notifyEl.style.opacity = '1';
         clearTimeout(notifyTimeout);
-        notifyTimeout = setTimeout(() => {
-            notifyEl.style.opacity = '0';
-            setTimeout(() => { notifyEl.style.display = 'none'; }, 500);
-        }, 2000);
+        notifyTimeout = setTimeout(() => { notifyEl.style.display = 'none'; }, 2000);
     }
 
-    // Navigasi Remote
     document.addEventListener('keydown', function(e) {
-        const focusables = Array.from(document.querySelectorAll('.btn-back, #videoOverlay, .channel-card'));
+        const focusables = Array.from(document.querySelectorAll('#videoOverlay, .channel-card'));
         let index = focusables.indexOf(document.activeElement);
-
-        // Shortcut Tombol Angka (1-9)
-        if (e.key >= '1' && e.key <= '9') {
-            const target = document.querySelector(`[data-channel-num="${e.key}"]`);
-            if (target) {
-                target.focus();
-                target.click();
-            }
-            return;
-        }
+        const cols = 3; // Berubah jadi 3 kolom
 
         let nextIndex;
-        const cols = 2; // Karena grid kita pakai 2 kolom
-
         switch (e.key) {
             case 'ArrowRight': nextIndex = index + 1; break;
             case 'ArrowLeft':  nextIndex = index - 1; break;
-            case 'ArrowDown':  nextIndex = index + cols; break;
-            case 'ArrowUp':    nextIndex = index - cols; break;
-            case 'Enter':
-                if (document.activeElement) document.activeElement.click();
-                return;
-            case 'Backspace': 
-                window.history.back(); 
-                return;
+            case 'ArrowDown':  nextIndex = (index === 0) ? 1 : index + cols; break;
+            case 'ArrowUp':    nextIndex = (index <= cols) ? 0 : index - cols; break;
+            case 'Enter': if (document.activeElement) document.activeElement.click(); return;
             default: return;
         }
 
@@ -233,23 +200,14 @@
             focusables[nextIndex].focus();
             e.preventDefault();
         }
-
-        // Scroll otomatis daftar channel
-        const active = document.activeElement;
-        if (active.classList.contains('channel-card')) {
-            active.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
     });
 
     function changeChannel(name, url) {
         document.getElementById('videoOverlay').style.display = 'none';
         const player = document.getElementById('mainPlayer');
-        const separator = url.includes('?') ? '&' : '?';
-        
-        player.src = url + separator + "autoplay=1";
+        player.src = url + (url.includes('?') ? '&' : '?') + "autoplay=1";
         document.getElementById('channelTitle').innerText = "Menonton: " + name;
 
-        // Update UI Active
         document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active-watching'));
         const current = Array.from(document.querySelectorAll('.channel-card')).find(c => c.innerText.includes(name));
         if (current) {
@@ -261,15 +219,10 @@
     function startExperience() {
         document.getElementById('videoOverlay').style.display = 'none';
         const first = document.querySelector('.channel-card');
-        if (first) {
-            first.focus();
-            first.click();
-        }
+        if (first) { first.focus(); first.click(); }
     }
 
-    window.onload = () => {
-        document.getElementById('videoOverlay').focus();
-    };
+    window.onload = () => document.getElementById('videoOverlay').focus();
 </script>
 
 </body>
