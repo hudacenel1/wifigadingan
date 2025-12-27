@@ -3,207 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndoStream All Channels</title>
+    <title>IndoStream Premium</title>
     <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
     <style>
         :root {
-            --primary: #e50914;
-            --bg: #121212;
-            --card: #1e1e1e;
+            --primary: #ff0000;
+            --bg: #0a0a0a;
+            --card-bg: #1a1a1a;
             --text: #ffffff;
+            --accent: #333;
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--bg);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
             color: var(--text);
             margin: 0; padding: 0;
             display: flex; flex-direction: column;
-            height: 100vh;
+            height: 100vh; overflow: hidden;
         }
 
-        /* Player Section */
-        .player-wrapper {
-            position: sticky; top: 0;
-            z-index: 1000;
+        /* Video Player Section */
+        .player-container {
+            width: 100%;
             background: #000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 100;
         }
-
         .video-js { width: 100%; aspect-ratio: 16/9; }
 
-        /* Search & Info Section */
-        .controls { padding: 15px; background: #1a1a1a; }
-        
-        #searchBar {
-            width: 100%; padding: 12px;
-            border-radius: 8px; border: none;
-            background: #333; color: white;
-            font-size: 1rem; box-sizing: border-box;
+        /* Header & Search */
+        .header {
+            padding: 15px;
+            background: linear-gradient(to bottom, #1a1a1a, var(--bg));
         }
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #searchBar {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--accent);
+            background: #222;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        #searchBar:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255,0,0,0.3); }
 
-        .info-text { margin-top: 10px; font-weight: bold; color: var(--primary); }
-
-        /* Grid Section */
-        .container { flex: 1; overflow-y: auto; padding: 15px; }
-
+        /* Grid View */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            scrollbar-width: thin;
+        }
         .channel-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 15px;
         }
 
-        .card {
-            background: var(--card);
-            border-radius: 8px;
-            padding: 12px 8px;
-            text-align: center;
+        /* Card Style */
+        .channel-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 2px solid transparent;
-            font-size: 0.85rem;
-            display: flex; align-items: center; justify-content: center;
-            min-height: 50px;
-            word-break: break-word;
+            text-align: center;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        .card:focus, .card:hover {
-            background: var(--primary);
-            transform: scale(1.05);
+        .channel-card:hover, .channel-card:focus {
+            transform: translateY(-5px);
+            background: #252525;
+            border-color: var(--primary);
             outline: none;
-            border-color: #fff;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #121212; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        /* Logo Styling */
+        .logo-box {
+            width: 70px;
+            height: 70px;
+            background: #333;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #aaa;
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+        }
+        .logo-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .channel-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+
+        /* Info Now Playing */
+        .now-playing-bar {
+            padding: 5px 20px;
+            font-size: 0.9rem;
+            color: #ccc;
+            background: var(--bg);
+            text-align: center;
+        }
+        .now-playing-bar span { color: var(--primary); font-weight: bold; }
 
         @media (min-width: 1024px) {
-            .channel-grid { grid-template-columns: repeat(8, 1fr); }
+            .channel-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .logo-box { width: 90px; height: 90px; }
         }
     </style>
 </head>
 <body>
 
-<div class="player-wrapper">
-    <video id="tv-player" class="video-js vjs-big-play-centered" controls preload="auto">
-        <p class="vjs-no-js">Gunakan browser modern untuk menonton.</p>
-    </video>
+<div class="player-container">
+    <video id="tv-player" class="video-js vjs-big-play-centered" controls preload="auto"></video>
 </div>
 
-<div class="controls">
-    <input type="text" id="searchBar" placeholder="Cari nama channel (Misal: TVRI, Jawa Pos, Rodja)...">
-    <div class="info-text" id="now-playing">Pilih Channel di Bawah</div>
+<div class="now-playing-bar" id="infoBar">Memilih Channel...</div>
+
+<div class="header">
+    <div class="search-wrapper">
+        <input type="text" id="searchBar" placeholder="Cari Channel TV...">
+    </div>
 </div>
 
-<div class="container">
-    <div class="channel-grid" id="channel-list"></div>
+<div class="content-area">
+    <div class="channel-grid" id="mainGrid"></div>
 </div>
 
 <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
-
 <script>
-    // Data Lengkap dari List Anda
-    const rawChannels = [
-        { n: "AKTV (720p)", u: "https://e.siar.us/live/aktv.m3u8" },
-        { n: "Al-Iman TV", u: "https://tv.aliman.id/aliman/live.m3u8" },
-        { n: "Alwafa Tarim TV", u: "https://ammedia.siar.us/ammedia/live/playlist.m3u8" },
-        { n: "Arek TV", u: "https://ams.juraganstreaming.com:5443/LiveApp/streams/arektv.m3u8" },
-        { n: "Ashiil TV", u: "https://wahyu1ptv.pages.dev/AshiilTV-HD.m3u8" },
-        { n: "Astha TV", u: "https://hgmtv.com:19360/asthatv/asthatv.m3u8" },
-        { n: "Atambua TV", u: "http://122.248.43.242:1935/ATAMBUATV/_definst_/myStream/playlist.m3u8" },
-        { n: "ATV", u: "http://103.180.118.5:9981/stream/channelid/1457201262" },
-        { n: "Bali TV", u: "http://103.180.118.5:9981/stream/channelid/916002722" },
-        { n: "Balikpapan TV", u: "https://5bf7b725107e5.streamlock.net/btv/btv/playlist.m3u8" },
-        { n: "Bandung TV", u: "http://202.150.153.254:65500/bandungtvWEBSITE.m3u8" },
-        { n: "Banjar TV", u: "https://banjartv.siar.us/banjartv/live/playlist.m3u8" },
-        { n: "Banten TV", u: "https://5bf7b725107e5.streamlock.net/bantentv/bantentv/playlist.m3u8" },
-        { n: "Banyumas TV", u: "https://5bf7b725107e5.streamlock.net/bmstv/bmstv/playlist.m3u8" },
-        { n: "Batam TV", u: "http://122.248.43.242:1935/BATAMTV/_definst_/myStream/playlist.m3u8" },
-        { n: "BE TV", u: "https://flv.intechmedia.net/live/ch58.m3u8" },
-        { n: "BeritaSatu English", u: "https://beritasatu.secureswiftcontent.com/han/beritasatu/bsatu10008/srtoutput/manifest.m3u8" },
-        { n: "Bioskop Indonesia", u: "http://103.180.118.5:9981/stream/channelid/1574481607" },
-        { n: "Biznet Kids", u: "http://livestream.biznetvideo.net/biznet_kids/smil:kids.smil/index.m3u8" },
-        { n: "BN Channel", u: "https://flv.intechmedia.net/live/ch112.m3u8" },
-        { n: "BTV", u: "https://btv.secureswiftcontent.com/han/btv/btv10005/srtoutput/manifest.m3u8" },
-        { n: "CNBC Indonesia", u: "https://live.cnbcindonesia.com/livecnbc/smil:cnbctv.smil/master.m3u8" },
-        { n: "DAAI TV", u: "https://pull.daaiplus.com/live-DAAIPLUS/live-DAAIPLUS_HD.m3u8" },
-        { n: "Dhoho TV", u: "https://dhohotv.siar.us/dhohotv/live/playlist.m3u8" },
-        { n: "Duta TV", u: "https://dutatv.siar.us/dutatv/live/playlist.m3u8" },
-        { n: "Garuda TV", u: "https://hgmtv.com:19360/garudatvlivestreaming/garudatvlivestreaming.m3u8" },
-        { n: "GTV", u: "http://203.77.246.58:4500/udp/239.1.3.68:5000" },
-        { n: "iBerkah", u: "https://play.accolamedia.id/accola/iberkah.stream/playlist.m3u8" },
-        { n: "Indosiar", u: "http://203.77.246.58:4500/udp/239.1.1.110:5000" },
-        { n: "iNews", u: "https://allcutv.rctiplus.id/inews2023.m3u8" },
-        { n: "Jawa Pos Surabaya", u: "http://122.248.43.242:1935/JAWAPOSTVSBY/_definst_/myStream/playlist.m3u8" },
-        { n: "Jawa Pos Jakarta", u: "http://122.248.43.242:1935/JAWAPOSTVJKT/_definst_/myStream/playlist.m3u8" },
-        { n: "JTV Surabaya", u: "http://122.248.43.242:1935/JTVSURABAYA/_definst_/myStream/playlist.m3u8" },
-        { n: "Madani TV", u: "https://stream.asianastream.com/madani/madanitv.smil/playlist.m3u8" },
-        { n: "MNCTV", u: "https://allcutv.rctiplus.id/mnctv2023.m3u8" },
-        { n: "Nusantara TV", u: "https://nusantaratv.siar.us/nusantaratv/live/playlist.m3u8" },
-        { n: "Rajawali TV (RTV)", u: "https://rtvstream.rtv.co.id:4555/hls/rtv.m3u8" },
-        { n: "RCTI", u: "https://allcutv.rctiplus.id/rcti2023.m3u8" },
-        { n: "Rodja TV", u: "https://rodjatv.com/rodjatv/live.m3u8" },
-        { n: "RRI Net", u: "https://private-streaming.rri.go.id/memfs/6f77c7b5-feb2-4935-9f89-e7e9fca0a54a_output_0.m3u8" },
-        { n: "SCTV", u: "http://203.77.246.58:4500/udp/239.1.1.108:5000" },
-        { n: "Surau TV", u: "https://wahyu1ptv.pages.dev/SurauTV-HD.m3u8" },
-        { n: "Tawaf TV", u: "https://streamtawaf.asfatv.com/hls/tawaftv.m3u8" },
-        { n: "Trans7", u: "https://video.detik.com/trans7/smil:trans7.smil/index.m3u8" },
-        { n: "Trans TV", u: "https://video.detik.com/transtv/smil:transtv.smil/index.m3u8" },
-        { n: "TV9 Nusantara", u: "https://5bf7b725107e5.streamlock.net/tv9/tv9/playlist.m3u8" },
-        { n: "TVKU", u: "https://tvku.tv/hlsstream/hls/live.m3u8" },
-        { n: "TVRI Nasional", u: "https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional.m3u8" },
-        { n: "TVRI Sport", u: "https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8" },
-        { n: "TVRI Jawa Barat", u: "https://ott-balancer.tvri.go.id/live/eds/Jabar/hls/Jabar.m3u8" },
-        { n: "TVRI Jawa Tengah", u: "https://ott-balancer.tvri.go.id/live/eds/Jateng/hls/Jateng.m3u8" },
-        { n: "TVRI Jawa Timur", u: "https://ott-balancer.tvri.go.id/live/eds/Jatim/hls/Jatim.m3u8" },
-        { n: "TVRI Yogyakarta", u: "https://ott-balancer.tvri.go.id/live/eds/Jogjakarta/hls/Jogjakarta.m3u8" },
-        { n: "TVRI World", u: "https://ott-balancer.tvri.go.id/live/eds/TVRIWorld/hls/TVRIWorld.m3u8" },
-        { n: "VTV", u: "http://175.158.57.130:8888/stream/channelid/1627810438" },
-        { n: "Zee Bioskop", u: "http://103.180.118.5:9981/stream/channelid/789671189" }
-        // ... (Data ini mewakili ringkasan semua channel utama Anda agar kode tidak terlalu panjang di sini)
+    // Database Channel (Hanya URL Dasar, Sisanya Autogenerate)
+    const channels = [
+        {n: "Trans7", u: "https://video.detik.com/trans7/smil:trans7.smil/index.m3u8"},
+        {n: "Trans TV", u: "https://video.detik.com/transtv/smil:transtv.smil/index.m3u8"},
+        {n: "RCTI", u: "https://allcutv.rctiplus.id/rcti2023.m3u8"},
+        {n: "MNCTV", u: "https://allcutv.rctiplus.id/mnctv2023.m3u8"},
+        {n: "GTV", u: "http://203.77.246.58:4500/udp/239.1.3.68:5000"},
+        {n: "iNews", u: "https://allcutv.rctiplus.id/inews2023.m3u8"},
+        {n: "SCTV", u: "http://203.77.246.58:4500/udp/239.1.1.108:5000"},
+        {n: "Indosiar", u: "http://203.77.246.58:4500/udp/239.1.1.110:5000"},
+        {n: "CNBC Indonesia", u: "https://live.cnbcindonesia.com/livecnbc/smil:cnbctv.smil/master.m3u8"},
+        {n: "Metro TV", u: "https://edge.medcom.id/live-edge/smil:mgnch.smil/playlist.m3u8"},
+        {n: "BN Channel", u: "https://flv.intechmedia.net/live/ch112.m3u8"},
+        {n: "RTV", u: "https://rtvstream.rtv.co.id:4555/hls/rtv.m3u8"},
+        {n: "Rodja TV", u: "https://rodjatv.com/rodjatv/live.m3u8"},
+        {n: "Surau TV", u: "https://wahyu1ptv.pages.dev/SurauTV-HD.m3u8"},
+        {n: "Madani TV", u: "https://stream.asianastream.com/madani/madanitv.smil/playlist.m3u8"},
+        {n: "Bali TV", u: "http://103.180.118.5:9981/stream/channelid/916002722"},
+        {n: "Jawa Pos TV", u: "http://122.248.43.242:1935/JAWAPOSTVSBY/_definst_/myStream/playlist.m3u8"},
+        {n: "VTV", u: "http://175.158.57.130:8888/stream/channelid/1627810438"},
+        {n: "Garuda TV", u: "https://hgmtv.com:19360/garudatvlivestreaming/garudatvlivestreaming.m3u8"},
+        {n: "Nusantara TV", u: "https://nusantaratv.siar.us/nusantaratv/live/playlist.m3u8"},
+        {n: "TV9 Nusantara", u: "https://5bf7b725107e5.streamlock.net/tv9/tv9/playlist.m3u8"}
     ];
 
-    // Karena keterbatasan teks, saya tambahkan logika otomatis untuk TVRI Regional lainnya
-    const regions = ["Aceh", "Bali", "Bengkulu", "Jambi", "Lampung", "Riau", "Papua", "Sulut", "Sumut", "NTB", "NTT", "Kalsel", "Kaltim", "Kalbar"];
-    regions.forEach(reg => {
-        rawChannels.push({ n: "TVRI " + reg, u: `https://ott-balancer.tvri.go.id/live/eds/${reg}/hls/${reg}.m3u8` });
+    // Tambahkan TVRI dengan Logo Resmi
+    const tvri = ["Nasional", "SportHD", "World", "Jateng", "Jabar", "Jatim", "Jogjakarta", "Bali", "Aceh", "Sumut", "Sulsel"];
+    tvri.forEach(id => {
+        channels.push({
+            n: "TVRI " + id, 
+            u: `https://ott-balancer.tvri.go.id/live/eds/${id}/hls/${id}.m3u8`,
+            logo: `https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/TVRI_logo_%282019%29.svg/200px-TVRI_logo_%282019%29.svg.png`
+        });
     });
 
+    // Inisialisasi
     const player = videojs('tv-player');
-    const channelList = document.getElementById('channel-list');
-    const nowPlayingText = document.getElementById('now-playing');
+    const mainGrid = document.getElementById('mainGrid');
     const searchBar = document.getElementById('searchBar');
+    const infoBar = document.getElementById('infoBar');
 
     function play(url, name) {
         player.src({ type: 'application/x-mpegURL', src: url });
         player.play();
-        nowPlayingText.innerText = "Memutar: " + name;
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        infoBar.innerHTML = `Sedang Menonton: <span>${name}</span>`;
+        window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    function renderChannels(filter = "") {
-        channelList.innerHTML = "";
-        const filtered = rawChannels.filter(c => c.n.toLowerCase().includes(filter.toLowerCase()));
-        
+    // Fungsi mendapatkan inisial jika logo tidak ada
+    function getInitials(name) {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    }
+
+    function renderChannels(query = "") {
+        mainGrid.innerHTML = "";
+        const filtered = channels.filter(c => c.n.toLowerCase().includes(query.toLowerCase()));
+
         filtered.forEach(ch => {
             const card = document.createElement('div');
-            card.className = 'card';
+            card.className = 'channel-card';
             card.tabIndex = 0;
-            card.innerText = ch.n;
+
+            // Logika Logo: Jika ada logo manual pakai itu, jika tidak buat inisial
+            let logoContent = `<div class="logo-box">${getInitials(ch.n)}</div>`;
+            if(ch.logo) {
+                logoContent = `<div class="logo-box"><img src="${ch.logo}" class="logo-img"></div>`;
+            } else if (ch.n.includes("Trans")) {
+                logoContent = `<div class="logo-box"><img src="https://upload.wikimedia.org/wikipedia/commons/0/02/Trans_TV_logo.svg" class="logo-img"></div>`;
+            }
+
+            card.innerHTML = `
+                ${logoContent}
+                <div class="channel-name">${ch.n}</div>
+            `;
+
             card.onclick = () => play(ch.u, ch.n);
             card.onkeydown = (e) => { if(e.key === 'Enter') play(ch.u, ch.n); };
-            channelList.appendChild(card);
+            mainGrid.appendChild(card);
         });
     }
 
-    searchBar.oninput = (e) => renderChannels(e.target.value);
+    searchBar.addEventListener('input', (e) => renderChannels(e.target.value));
 
-    // Jalankan awal
+    // Start
     renderChannels();
-    play(rawChannels[0].u, rawChannels[0].n);
+    play(channels[0].u, channels[0].n);
 </script>
-
 </body>
 </html>
