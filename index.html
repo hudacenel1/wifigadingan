@@ -2,241 +2,137 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndoStream Pro - Full Channels</title>
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>IndoTV Ringan</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        :root { --primary: #ff0000; --bg: #0f0f0f; --card: #252525; --text: #ffffff; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        :root { --primary: #ff3d00; --dark: #000000; --gray: #1a1a1a; --accent: #2979ff; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--dark); color: white; margin: 0; padding-bottom: 30px; }
         
-        .player-box { position: sticky; top: 0; z-index: 1000; background: #000; width: 100%; }
-        .video-js { width: 100%; aspect-ratio: 16/9; }
+        /* Video Player */
+        .video-container { position: sticky; top: 0; z-index: 1000; background: #000; width: 100%; aspect-ratio: 16/9; }
+        video { width: 100%; height: 100%; }
 
-        .ui-header { padding: 10px; background: #1a1a1a; border-bottom: 1px solid #333; }
-        #searchBox { width: 100%; padding: 12px; border-radius: 5px; border: none; background: #333; color: white; font-size: 16px; margin-bottom: 10px; box-sizing: border-box; outline: none; }
-        #searchBox:focus { border: 1px solid var(--primary); }
-        .playing-now { font-size: 14px; color: var(--primary); font-weight: bold; display: flex; justify-content: space-between; }
+        /* Panel Kontrol */
+        .control-panel { padding: 10px; background: #222; display: flex; gap: 10px; align-items: center; }
+        button.refresh { background: var(--accent); border: none; color: white; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .status-text { font-size: 12px; color: #aaa; flex-grow: 1; }
 
-        .main-content { flex: 1; overflow-y: auto; padding: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+        /* Pencarian */
+        .search-container { padding: 10px; }
+        #search { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: var(--gray); color: white; outline: none; }
 
-        .card { 
-            background: var(--card); border-radius: 8px; padding: 15px 5px; text-align: center; 
-            cursor: pointer; transition: 0.2s; border: 2px solid transparent; 
-            font-size: 12px; display: flex; align-items: center; justify-content: center; min-height: 50px;
-        }
-        .card:hover { background: #333; }
-        .card.active { border-color: var(--primary); background: #333; color: var(--primary); font-weight: bold; }
+        /* Grid Saluran */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; padding: 10px; }
+        .card { background: var(--gray); border-radius: 10px; padding: 15px 5px; text-align: center; cursor: pointer; border: 1px solid #333; transition: 0.2s; }
+        .card:active { background: #333; transform: scale(0.95); border-color: var(--accent); }
+        .card-name { font-size: 13px; font-weight: bold; margin-bottom: 5px; }
+        .card-group { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-        @media (min-width: 768px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
+        .footer-note { text-align: center; font-size: 10px; color: #444; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="player-box">
-    <video id="tv-player" class="video-js vjs-big-play-centered vjs-fluid" controls preload="auto" playsinline></video>
+<div class="video-container">
+    <video id="video" controls autoplay playsinline></video>
 </div>
 
-<div class="ui-header">
-    <input type="text" id="searchBox" placeholder="Cari channel (TVRI, Trans, JTV, dll)...">
-    <div class="playing-now">
-        <span id="info">Memuat Daftar...</span>
-        <span id="quality-info" style="color: #888; font-size: 11px;">Auto-Quality Enabled</span>
-    </div>
+<div class="control-panel">
+    <div class="status-text" id="status">Pilih saluran di bawah</div>
+    <button class="refresh" onclick="refreshStream()">🔄 REFRESH</button>
 </div>
 
-<div class="main-content">
-    <div class="grid" id="container"></div>
+<div class="search-container">
+    <input type="text" id="search" placeholder="Cari TV (Contoh: RCTI, TVRI)...">
 </div>
 
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<div class="grid" id="channel-list"></div>
+
+<div class="footer-note">Mode Hemat Kuota: Selalu mencoba kualitas terendah agar lancar.</div>
+
 <script>
+    // DATA CHANNEL TERBARU ANDA
     const channels = [
-        {n: "AKTV", u: "https://e.siar.us/live/aktv.m3u8"},
-        {n: "Al-Iman TV", u: "https://tv.aliman.id/aliman/live.m3u8"},
-        {n: "Alwafa Tarim TV", u: "https://ammedia.siar.us/ammedia/live/playlist.m3u8"},
-        {n: "Arek TV", u: "https://ams.juraganstreaming.com:5443/LiveApp/streams/arektv.m3u8"},
-        {n: "Ashiil TV", u: "https://wahyu1ptv.pages.dev/AshiilTV-HD.m3u8"},
-        {n: "Astha TV", u: "https://hgmtv.com:19360/asthatv/asthatv.m3u8"},
-        {n: "Atambua TV", u: "http://122.248.43.242:1935/ATAMBUATV/_definst_/myStream/playlist.m3u8"},
-        {n: "ATV", u: "http://103.180.118.5:9981/stream/channelid/1457201262"},
-        {n: "Bali TV", u: "http://103.180.118.5:9981/stream/channelid/916002722"},
-        {n: "Balikpapan TV", u: "https://5bf7b725107e5.streamlock.net/btv/btv/playlist.m3u8"},
-        {n: "Bandung TV", u: "http://202.150.153.254:65500/bandungtvWEBSITE.m3u8"},
-        {n: "Banjar TV", u: "https://banjartv.siar.us/banjartv/live/playlist.m3u8"},
-        {n: "Banten TV", u: "https://5bf7b725107e5.streamlock.net/bantentv/bantentv/playlist.m3u8"},
-        {n: "Banyumas TV", u: "https://5bf7b725107e5.streamlock.net/bmstv/bmstv/playlist.m3u8"},
-        {n: "Batam TV", u: "http://122.248.43.242:1935/BATAMTV/_definst_/myStream/playlist.m3u8"},
-        {n: "BE TV", u: "https://flv.intechmedia.net/live/ch58.m3u8"},
-        {n: "BeritaSatu English", u: "https://beritasatu.secureswiftcontent.com/han/beritasatu/bsatu10008/srtoutput/manifest.m3u8"},
-        {n: "Bioskop Indonesia", u: "http://103.180.118.5:9981/stream/channelid/1574481607"},
-        {n: "Biznet Adventure", u: "http://livestream.biznetvideo.net/biznet_adventure/smil:adventure.smil/playlist.m3u8"},
-        {n: "Biznet Kids", u: "http://livestream.biznetvideo.net/biznet_kids/smil:kids.smil/index.m3u8"},
-        {n: "Biznet Lifestyle", u: "http://livestream.biznetvideo.net/biznet_lifestyle/smil:lifestyle.smil/index.m3u8"},
-        {n: "BN Channel", u: "https://flv.intechmedia.net/live/ch112.m3u8"},
-        {n: "BRTV", u: "https://5bf7b725107e5.streamlock.net/brtv/brtv/playlist.m3u8"},
-        {n: "BTV", u: "https://btv.secureswiftcontent.com/han/btv/btv10005/srtoutput/manifest.m3u8"},
-        {n: "Bungo TV", u: "https://5bf7b725107e5.streamlock.net/bungotv/bungotv/playlist.m3u8"},
-        {n: "Caruban TV", u: "https://stream.carubantv.id/hls/0/stream.m3u8"},
-        {n: "Celebes TV", u: "https://ams.juraganstreaming.com:5443/LiveApp/streams/celebesmedia.m3u8"},
-        {n: "Citra Dangdut", u: "http://103.180.118.5:9981/stream/channelid/64520893"},
-        {n: "CNBC Indonesia", u: "https://live.cnbcindonesia.com/livecnbc/smil:cnbctv.smil/master.m3u8"},
-        {n: "DAAI TV", u: "https://pull.daaiplus.com/live-DAAIPLUS/live-DAAIPLUS_HD.m3u8"},
-        {n: "Davika TV", u: "https://5bf7b725107e5.streamlock.net/davika/davika/playlist.m3u8"},
-        {n: "Dhamma TV", u: "https://b.webcache.maxindo.net.id/dhamma/dhamma.m3u8"},
-        {n: "Dhoho TV", u: "https://dhohotv.siar.us/dhohotv/live/playlist.m3u8"},
-        {n: "DM TV Malang", u: "https://e.siar.us/live/dmtv.m3u8"},
-        {n: "dTVi", u: "https://e.siar.us/live/dtvi.m3u8"},
-        {n: "Dunia Lain", u: "http://103.180.118.5:9981/stream/channelid/406907994"},
-        {n: "Duta TV", u: "https://dutatv.siar.us/dutatv/live/playlist.m3u8"},
-        {n: "Efarina TV", u: "https://live.efarinatv.net/hls/stream123/index.m3u8"},
-        {n: "Elshinta TV", u: "https://ams.juraganstreaming.com:5443/LiveApp/streams/elshintatv.m3u8"},
-        {n: "Fajar TV", u: "http://122.248.43.242:1935/FAJARTV/_definst_/myStream/playlist.m3u8"},
-        {n: "Ficom Channel", u: "https://v3.siar.us/ficomchannel/live/playlist.m3u8"},
-        {n: "Garuda TV", u: "https://hgmtv.com:19360/garudatvlivestreaming/garudatvlivestreaming.m3u8"},
-        {n: "GTV", u: "https://allcutv.rctiplus.id/gtv2023.m3u8"},
-        {n: "Huma Betang TV", u: "https://v3.siar.us/humabetangtv/live/playlist.m3u8"},
-        {n: "I Am Channel", u: "https://61146e7ab7a66.streamlock.net:8089/tes/1/chunklist.m3u8"},
-        {n: "iBerkah", u: "https://play.accolamedia.id/accola/iberkah.stream/playlist.m3u8"},
-        {n: "IDTV", u: "https://b1world.beritasatumedia.com/Beritasatu/B1World_manifest.m3u8"},
-        {n: "IDX Channel", u: "http://vod.linknetott.swiftcontent.com/Content/HLS/Live/Channel(ch389)/index.m3u8"},
-        {n: "Indonesiana TV", u: "https://kbtv.akamaized.net/hls/live/2031188/kanalbuya/playlist.m3u8"},
-        {n: "Indosiar", u: "http://203.77.246.58:4500/udp/239.1.1.110:5000"},
-        {n: "iNews", u: "https://allcutv.rctiplus.id/inews2023.m3u8"},
-        {n: "Inspira TV", u: "https://inspiratv.siar.us/inspiratv/live/playlist.m3u8"},
-        {n: "Izzah TV", u: "https://streaming.radiosalamjambi.com/izzahtv.m3u8"},
-        {n: "Jambi TV", u: "https://ams.juraganstreaming.com:5443/JambiTV/streams/livestream.m3u8"},
-        {n: "Jawa Pos TV Surabaya", u: "http://122.248.43.242:1935/JAWAPOSTVSBY/_definst_/myStream/playlist.m3u8"},
-        {n: "Jawa Pos TV Bali", u: "http://122.248.43.242:1935/JAWAPOSTVBALI/_definst_/myStream/playlist.m3u8"},
-        {n: "Jawa Pos TV Jakarta", u: "http://122.248.43.242:1935/JAWAPOSTVJKT/_definst_/myStream/playlist.m3u8"},
-        {n: "Jawa Pos TV Madiun", u: "http://122.248.43.242:1935/JAWAPOSTVMADIUN/_definst_/myStream/playlist.m3u8"},
-        {n: "Jawa Pos TV Magelang", u: "http://122.248.43.242:1935/JAWAPOSTVMAGELANG/_definst_/myStream/playlist.m3u8"},
-        {n: "Jawa Pos TV Semarang", u: "http://122.248.43.242:1935/JAWAPOSTVSEMARANG/_definst_/myStream/playlist.m3u8"},
-        {n: "Jek TV", u: "http://27.124.81.245:1935/jektv/myStream/playlist.m3u8"},
-        {n: "Jogja Istimewa TV", u: "http://103.255.15.222:1935/tv/jitv_720p/playlist.m3u8"},
-        {n: "Jogja TV", u: "https://stream.jogjatv.co.id/jtvlive/stream/index.m3u8"},
-        {n: "JTV Surabaya", u: "http://122.248.43.242:1935/JTVSURABAYA/_definst_/myStream/playlist.m3u8"},
-        {n: "JTV Kediri", u: "http://122.248.43.242:1935/JTVKEDIRI/_definst_/myStream/playlist.m3u8"},
-        {n: "Kawanua TV", u: "http://122.248.43.242:1935/KAWANUATV/_definst_/myStream/playlist.m3u8"},
-        {n: "Kids TV", u: "http://origin5.mediacdn.ru/live/kidstv/index.m3u8"},
-        {n: "Kilisuci TV", u: "https://5bf7b725107e5.streamlock.net/kstv/kstv/playlist.m3u8"},
-        {n: "KTV", u: "https://flv.intechmedia.net/live/ch118.m3u8"},
-        {n: "Lingkar TV", u: "https://lingkartv.my.id/hls/lingkartv.m3u8"},
-        {n: "Madani TV", u: "https://stream.asianastream.com/madani/madanitv.smil/playlist.m3u8"},
-        {n: "Madu TV", u: "https://re1.siar.us/madutv/hd720/playlist.m3u8"},
-        {n: "Magna Channel", u: "https://edge.medcom.id/live-edge/smil:magna.smil/playlist.m3u8"},
-        {n: "MDTV", u: "https://wahyu1ptv.pages.dev/MDTV-HD.m3u8"},
-        {n: "Metro Globe Network", u: "https://edge.medcom.id/live-edge/smil:mgnch.smil/playlist.m3u8"},
-        {n: "MGI TV", u: "https://tv.rodja.live/tasik/ngrp:mgitv_all/playlist.m3u8"},
-        {n: "MNCTV", u: "https://allcutv.rctiplus.id/mnctv2023.m3u8"},
-        {n: "MQTV", u: "https://5bf7b725107e5.streamlock.net/mqtv/mqtv/playlist.m3u8"},
-        {n: "Music Info Channel", u: "https://mic.siar.us/mic/live/mic.m3u8"},
-        {n: "Nusantara TV", u: "https://nusantaratv.siar.us/nusantaratv/live/playlist.m3u8"},
-        {n: "Online TV Nusantara", u: "https://5bf7b725107e5.streamlock.net/onlinetvnusantara/onlinetvnusantara/playlist.m3u8"},
-        {n: "Padang TV", u: "http://122.248.43.242:1935/PADANGTV/_definst_/myStream/playlist.m3u8"},
-        {n: "Palembang TV", u: "https://flv.intechmedia.net/live/ch18.m3u8"},
-        {n: "PKTV", u: "https://ams.juraganstreaming.com:5443/LiveApp/streams/pktv.m3u8"},
-        {n: "PONTV", u: "http://122.248.43.242:1935/PONTV/_definst_/myStream/playlist.m3u8"},
-        {n: "PSJ TV", u: "https://play.accolamedia.id/accola/psj.stream/playlist.m3u8"},
-        {n: "Puja TV Aceh", u: "https://v6.siar.us/pujatv/live/chunks.m3u8"},
-        {n: "Radar Tasikmalaya TV", u: "https://v2.siar.us/radartasikmalaya/live/playlist.m3u8"},
-        {n: "Radar Lampung TV", u: "http://122.248.43.138:1935/ch17/myStream/playlist.m3u8"},
-        {n: "Radio Kita TV", u: "https://streaming.yufid.com/hls/radiokitatv.m3u8"},
-        {n: "Rajawali TV", u: "https://rtvstream.rtv.co.id:4555/hls/rtv.m3u8"},
-        {n: "Rakyat Bengkulu TV", u: "https://flv.intechmedia.net/live/ch59.m3u8"},
-        {n: "RBTV Jogja", u: "http://live.rbtvjogja.tv/481e185e-72e3-49f6-ad37-e495f911c9e4_output_0.m3u8"},
-        {n: "RCTI", u: "https://allcutv.rctiplus.id/rcti2023.m3u8"},
-        {n: "Rodja TV", u: "https://rodjatv.com/rodjatv/live.m3u8"},
-        {n: "RRI Net", u: "https://private-streaming.rri.go.id/memfs/6f77c7b5-feb2-4935-9f89-e7e9fca0a54a_output_0.m3u8"},
-        {n: "Sakti TV", u: "https://saktitv.siar.us/saktitv/live/playlist.m3u8"},
-        {n: "Salam TV", u: "https://salamtv.siar.us/live/salamtv.m3u8"},
-        {n: "Salira TV", u: "https://live.salira.tv/p/3870/hybrid/play.m3u8"},
-        {n: "Sampit TV", u: "https://sampit-tv.siar.us/live/sampit-tv.m3u8"},
-        {n: "SCTV", u: "http://203.77.246.58:4500/udp/239.1.1.108:5000"},
-        {n: "Semarang TV", u: "http://116.254.112.74/hls/cakralive.m3u8"},
-        {n: "Sin Po TV", u: "http://175.158.57.130:8888/stream/channelid/1138678610"},
-        {n: "Sindo News TV", u: "http://103.180.118.5:9981/stream/channelid/1133438425"},
-        {n: "Sriwijaya TV", u: "https://sriwijayatv.siar.us/live/sriwijayatv.m3u8"},
-        {n: "Stara TV", u: "https://stream.staratv.id/hls/0/stream.m3u8"},
-        {n: "Surabaya TV", u: "https://e.siar.us/live/surabayatv.m3u8"},
-        {n: "Surau TV", u: "https://wahyu1ptv.pages.dev/SurauTV-HD.m3u8"},
-        {n: "TA TV", u: "https://v2.siar.us/tatv/live.sdp/playlist.m3u8"},
-        {n: "Tawaf TV", u: "https://streamtawaf.asfatv.com/hls/tawaftv.m3u8"},
-        {n: "Tegar TV Jogja", u: "http://wms.klikhost.com/tegarjogja/tegarjogja/playlist.m3u8"},
-        {n: "Timor TV", u: "http://122.248.43.242:1935/TIMORTV/_definst_/myStream/playlist.m3u8"},
-        {n: "Trans7", u: "https://video.detik.com/trans7/smil:trans7.smil/index.m3u8"},
-        {n: "Trans TV", u: "https://video.detik.com/transtv/smil:transtv.smil/index.m3u8"},
-        {n: "TV9 Nusantara", u: "https://5bf7b725107e5.streamlock.net/tv9/tv9/playlist.m3u8"},
-        {n: "TV Mu", u: "https://e.siar.us/live/tvmu.m3u8"},
-        {n: "TV MUI", u: "https://mui.siar.us/mui/live/playlist.m3u8"},
-        {n: "TVKU", u: "https://tvku.tv/hlsstream/hls/live.m3u8"},
-        {n: "TVR Parlemen", u: "https://ssv1.dpr.go.id/golive/livestream/playlist.m3u8"},
-        {n: "VTV", u: "http://175.158.57.130:8888/stream/channelid/1627810438"},
-        {n: "Zee Bioskop", u: "http://103.180.118.5:9981/stream/channelid/789671189"},
-        {n: "Rinjani TV", u: "https://rinjanitv.cloud/hls/tvkabel.m3u8"}
+        { name: "RCTI", url: "https://allcutv.rctiplus.id/rcti2023.m3u8", group: "Nasional" },
+        { name: "MNCTV", url: "https://allcutv.rctiplus.id/mnctv2023.m3u8", group: "Nasional" },
+        { name: "GTV", url: "http://203.77.246.58:4500/udp/239.1.3.68:5000", group: "Nasional" },
+        { name: "iNews", url: "https://allcutv.rctiplus.id/inews2023.m3u8", group: "Nasional" },
+        { name: "Trans 7", url: "https://video.detik.com/trans7/smil:trans7.smil/index.m3u8", group: "Nasional" },
+        { name: "Trans TV", url: "https://video.detik.com/transtv/smil:transtv.smil/index.m3u8", group: "Nasional" },
+        { name: "Indosiar", url: "http://203.77.246.58:4500/udp/239.1.1.110:5000", group: "Nasional" },
+        { name: "SCTV", url: "http://203.77.246.58:4500/udp/239.1.1.108:5000", group: "Nasional" },
+        { name: "Metro Globe", url: "https://edge.medcom.id/live-edge/smil:mgnch.smil/playlist.m3u8", group: "Berita" },
+        { name: "CNBC Indo", url: "https://live.cnbcindonesia.com/livecnbc/smil:cnbctv.smil/master.m3u8", group: "Berita" },
+        { name: "Nusantara TV", url: "https://nusantaratv.siar.us/nusantaratv/live/playlist.m3u8", group: "Nasional" },
+        { name: "TVRI Nasional", url: "https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional.m3u8", group: "TVRI" },
+        { name: "TVRI Sport", url: "https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8", group: "TVRI" },
+        { name: "TVRI Jateng", url: "https://ott-balancer.tvri.go.id/live/eds/Jateng/hls/Jateng.m3u8", group: "Regional" },
+        { name: "TVRI Jatim", url: "https://ott-balancer.tvri.go.id/live/eds/Jatim/hls/Jatim.m3u8", group: "Regional" },
+        { name: "TVRI Jabar", url: "https://ott-balancer.tvri.go.id/live/eds/Jabar/hls/Jabar.m3u8", group: "Regional" },
+        { name: "Rodja TV", url: "https://rodjatv.com/rodjatv/live.m3u8", group: "Religi" },
+        { name: "Garuda TV", url: "https://hgmtv.com:19360/garudatvlivestreaming/garudatvlivestreaming.m3u8", group: "Nasional" },
+        { name: "Bali TV", url: "http://103.180.118.5:9981/stream/channelid/916002722", group: "Daerah" },
+        { name: "Surabaya TV", url: "https://e.siar.us/live/surabayatv.m3u8", group: "Daerah" }
     ];
 
-    const tvriRegs = ["Aceh", "Bali", "Babel", "Bengkulu", "DKI", "Gorontalo", "Jambi", "Jabar", "Jateng", "Jatim", "Kalbar", "Kalsel", "Kalteng", "Kaltim", "Lampung", "Ambon", "Nasional", "Sulut", "Sumut", "NTB", "NTT", "Papua", "Riau", "SportHD", "Sulbar", "Sulsel", "Sulteng", "Sultra", "Sumbar", "Sumsel", "Pabar", "TVRIWorld", "Jogjakarta"];
-    tvriRegs.forEach(id => channels.push({ n: "TVRI " + id, u: `https://ott-balancer.tvri.go.id/live/eds/${id}/hls/${id}.m3u8` }));
+    const video = document.getElementById('video');
+    const status = document.getElementById('status');
+    let currentUrl = "";
+    let hls = null;
 
-    // Inisialisasi Video.js dengan optimasi Buffer
-    const player = videojs('tv-player', {
-        autoplay: true,
-        html5: {
-            vhs: {
-                overrideNative: true,
-                maxBufferLength: 60, // Buffer 1 menit ke depan
-                initialBufferedSeconds: 8,
-                enableLowInitialPlaylist: true
-            }
+    function playStream(url, name) {
+        currentUrl = url;
+        status.innerText = "📺 " + name;
+
+        if (hls) { hls.destroy(); }
+
+        if (Hls.isSupported()) {
+            hls = new Hls({
+                startLevel: 0, // Mulai dari kualitas PALING RENDAH (agar tidak macet)
+                capLevelToPlayerSize: true,
+                autoStartLoad: true
+            });
+            hls.loadSource(url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                video.play().catch(() => {
+                    status.innerText = "Klik Play pada Video";
+                });
+            });
+        } 
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = url;
         }
-    });
-
-    const container = document.getElementById('container');
-    const search = document.getElementById('searchBox');
-    const info = document.getElementById('info');
-
-    function play(url, name, element) {
-        player.src({ type: 'application/x-mpegURL', src: url });
-        player.play().catch(e => console.log("User interaction required"));
-        info.innerText = "Memutar: " + name;
-
-        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-        if(element) element.classList.add('active');
-        
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Auto-retry jika gagal muat segmen
-    player.on('error', function() {
-        const currentSrc = player.src();
-        if(currentSrc) {
-            console.log("Retrying stream...");
-            setTimeout(() => {
-                player.src(currentSrc);
-                player.load();
-                player.play();
-            }, 3000);
+    function refreshStream() {
+        if (currentUrl) {
+            playStream(currentUrl, status.innerText.replace("📺 ", ""));
         }
-    });
+    }
 
-    function render(filter = "") {
-        container.innerHTML = "";
-        const list = channels.filter(c => c.n.toLowerCase().includes(filter.toLowerCase()));
-        list.forEach(ch => {
-            const div = document.createElement('div');
-            div.className = "card";
-            div.innerText = ch.n;
-            div.onclick = () => play(ch.u, ch.n, div);
-            container.appendChild(div);
+    function renderList(filter = "") {
+        const list = document.getElementById('channel-list');
+        list.innerHTML = "";
+        const filtered = channels.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()));
+        
+        filtered.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-group">${c.group}</div>
+                <div class="card-name">${c.name}</div>
+            `;
+            card.onclick = () => playStream(c.url, c.name);
+            list.appendChild(card);
         });
     }
 
-    search.addEventListener('input', (e) => render(e.target.value));
-    
-    // Inisialisasi awal
-    render();
-    if(channels.length > 0) play(channels[0].u, channels[0].n, document.querySelector('.card'));
+    document.getElementById('search').oninput = (e) => renderList(e.target.value);
+    renderList();
 </script>
+
 </body>
 </html>
