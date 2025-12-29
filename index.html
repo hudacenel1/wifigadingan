@@ -2,114 +2,117 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>TV Online Streaming</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Video.js -->
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet">
-
+    <title>TV Online Pro - Remote Ready</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            background: #000;
-            font-family: Arial, sans-serif;
-            color: #fff;
-        }
-
-        header {
-            background: #111;
-            padding: 12px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .player-container {
-            max-width: 100%;
-            margin: auto;
-        }
-
-        video {
-            width: 100%;
-            height: auto;
-        }
-
-        .channel-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 10px;
-            padding: 10px;
-            background: #111;
-        }
-
-        .channel {
+        body { background-color: #000; color: #fff; font-family: sans-serif; overflow: hidden; height: 100vh; }
+        
+        /* Tombol Navigasi */
+        .nav-link {
             background: #222;
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-            font-size: 14px;
+            color: white !important;
+            margin: 5px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border: 3px solid transparent;
+            border-radius: 8px;
+            transition: 0.2s;
         }
 
-        .channel:hover {
-            background: #0d6efd;
+        /* Highlight saat remote fokus */
+        .nav-link:focus, .btn-full:focus {
+            border-color: #ff0000;
+            background-color: #e50914 !important;
+            transform: scale(1.1);
+            outline: none;
+            z-index: 10;
         }
+
+        .video-container {
+            background: #111;
+            border: 2px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            width: 75%;
+            margin: 0 auto;
+            aspect-ratio: 16/9;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Tombol Fullscreen Khusus */
+        .btn-full {
+            background: #444;
+            color: white;
+            border: 3px solid transparent;
+            padding: 10px 30px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .instruction { font-size: 0.8rem; color: #666; margin-top: 5px; }
     </style>
 </head>
 <body>
 
-<header>📺 TV ONLINE STREAMING</header>
+<div class="container-fluid h-100 d-flex flex-column justify-content-center align-items-center">
+    
+    <h3 class="mb-3" style="color: #e50914; letter-spacing: 2px;">TV DIGITAL INDONESIA</h3>
 
-<div class="player-container">
-    <video
-        id="tvPlayer"
-        class="video-js vjs-default-skin"
-        controls
-        autoplay
-        preload="auto"
-        data-setup='{
-            "fluid": true
-        }'>
-        <source src="https://video.detik.com/trans7/smil:trans7.smil/index.m3u8" type="application/x-mpegURL">
-    </video>
+    <button class="btn-full" onclick="openFullscreen();"> ? PERBESAR LAYAR (FULLSCREEN)</button>
+
+    <div class="video-container" id="player-section">
+        <iframe id="tv-player" src="https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==" allow="autoplay; fullscreen"></iframe>
+    </div>
+
+    <div class="d-flex flex-wrap justify-content-center mt-4">
+        <button class="nav-link" onclick="playChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==')">GTV</button>
+        <button class="nav-link" onclick="playChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">MNCTV</button>
+        <button class="nav-link" onclick="playChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1')">iNews</button>
+        <button class="nav-link" onclick="playChan('https://20.detik.com/watch/livestreaming-trans7')">Trans7</button>
+        <button class="nav-link" onclick="playChan('https://20.detik.com/watch/livestreaming-transtv')">Trans TV</button>
+        <button class="nav-link" onclick="playChan('https://www.cnnindonesia.com/tv/embed?ref=transmedia')">CNN</button>
+        <button class="nav-link" onclick="playChan('https://www.cnbcindonesia.com/embed/tv?ref=transmedia')">CNBC</button>
+    </div>
+
+    <p class="instruction">Tekan 'Back' pada remote untuk keluar dari layar penuh</p>
 </div>
-
-<div class="channel-list">
-
-    <div class="channel" onclick="changeChannel('http://203.77.246.58:4500/udp/239.1.3.68:5000')">
-        TRANS7
-    </div>
-
-    <div class="channel" onclick="changeChannel('http://203.77.246.58:4500/udp/239.1.1.108:5000')">
-        Channel Demo 1
-    </div>
-
-    <div class="channel" onclick="changeChannel('https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8')">
-        Channel Demo 2
-    </div>
-
-    <div class="channel" onclick="changeChannel('https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8')">
-        Channel Demo 3
-    </div>
-
-</div>
-
-<!-- Video.js -->
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 
 <script>
-    const player = videojs('tvPlayer');
+    const elem = document.getElementById("player-section");
+    const player = document.getElementById("tv-player");
 
-    function changeChannel(url) {
-        player.src({
-            src: url,
-            type: 'application/x-mpegURL'
-        });
-        player.play();
+    // Fungsi Ganti Channel
+    function playChan(url) {
+        player.src = url;
+        // Fokuskan kembali ke tombol fullscreen setelah ganti channel
+        document.querySelector('.btn-full').focus();
     }
+
+    // Fungsi Layar Penuh
+    function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
+    }
+
+    // Auto focus saat pertama kali buka
+    window.onload = function() {
+        document.querySelector('.nav-link').focus();
+    };
 </script>
 
 </body>
 </html>
-
