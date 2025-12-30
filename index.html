@@ -3,32 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal TV Online Pro</title>
+    <title>Portal TV Online Pro - Remote Mode</title>
     <style>
-        :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; }
+        :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar */
         .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; }
-        .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); }
+        .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); position: sticky; top: 0; background: var(--sidebar); z-index: 10; }
         
         .channel { 
             display: flex; align-items: center; padding: 15px; cursor: pointer; 
-            transition: 0.2s; border-bottom: 1px solid #222;
+            transition: 0.2s; border-bottom: 1px solid #222; outline: none;
         }
-        .channel:hover { background: #333; }
+        .channel:hover, .channel.focused { background: var(--focus); border-left: 4px solid var(--primary); }
+        .channel.active { background: var(--active); }
+        
         .channel img { width: 60px; height: 35px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #000; }
         .channel h4 { margin: 0; font-size: 14px; }
 
-        /* Area Player */
         .main { flex: 1; display: flex; flex-direction: column; }
         .player-wrapper { flex: 1; position: relative; background: #000; }
-        
-        /* Iframe Styling */
         #videoPlayer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
         .info { padding: 20px; background: #111; border-top: 1px solid #333; }
-        .info h2 { margin: 0; font-size: 18px; }
+        .instruction { font-size: 12px; color: #888; margin-top: 5px; }
         
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -39,27 +37,37 @@
 </head>
 <body>
 
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="header">DAFTAR SALURAN</div>
         
-        <div class="channel" onclick="changeChan('yNKvkPJl-tg', 'TV One Live', true)">
+        <div class="channel" tabindex="0" onclick="changeChan('yNKvkPJl-tg', 'TV One Live', true)">
             <img src="https://img.youtube.com/vi/yNKvkPJl-tg/mqdefault.jpg">
-            <h4>TV One (YouTube)</h4>
+            <h4>TV One</h4>
         </div>
 
-        <div class="channel" onclick="changeChan('X_7pS9P_E6U', 'Kompas TV Live', true)">
+        <div class="channel" tabindex="0" onclick="changeChan('X_7pS9P_E6U', 'Kompas TV Live', true)">
             <img src="https://img.youtube.com/vi/X_7pS9P_E6U/mqdefault.jpg">
-            <h4>Kompas TV (YouTube)</h4>
+            <h4>Kompas TV</h4>
         </div>
 
-        <div class="channel" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV (Detik)', false)">
-            <img src="images/transtv.jpg" style="background: white; padding: 2px;">
-            <h4>Trans TV (Detik)</h4>
+        <div class="channel" tabindex="0" onclick="changeChan('live_stream?channel=UC7L_j8N8_UuV8xK_kS5n7rA', 'Metro TV Live', true)">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/MetroTV_Indonesia_Logo.svg/1200px-MetroTV_Indonesia_Logo.svg.png">
+            <h4>Metro TV</h4>
+        </div>
+
+        <div class="channel" tabindex="0" onclick="changeChan('live_stream?channel=UCR77Hhf_zvF7iI_0OALl8uQ', 'iNews TV Live', true)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/INews_2023.svg/1200px-INews_2023.svg.png">
+            <h4>iNews TV</h4>
+        </div>
+
+        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Trans_TV_logo.svg/200px-Trans_TV_logo.svg.png" style="background: white;">
+            <h4>Trans TV</h4>
         </div>
         
-        <div class="channel" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7 (Detik)', false)">
-            <img src="images/trans7.jpg" style="background: white; padding: 2px;">
-            <h4>Trans 7 (Detik)</h4>
+        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Trans7_logo.svg/1200px-Trans7_logo.svg.png" style="background: white;">
+            <h4>Trans 7</h4>
         </div>
     </div>
 
@@ -70,27 +78,61 @@
         <div class="info">
             <h2 id="title">Sedang Menonton: TV One Live</h2>
             <p>Status: <span style="color: lime;">Online</span></p>
+            <p class="instruction">Navigasi Remote: Gunakan <b>Panah Atas/Bawah</b> untuk memilih, <b>Enter</b> untuk memutar.</p>
         </div>
     </div>
 
     <script>
+        let currentIndex = -1;
+        const channels = document.querySelectorAll('.channel');
+
         function changeChan(source, name, isYouTube) {
             const player = document.getElementById('videoPlayer');
             const title = document.getElementById('title');
             
+            // Hapus kelas active dari semua saluran
+            channels.forEach(c => c.classList.remove('active'));
+            
             if (isYouTube) {
-                // Jika YouTube, gunakan format embed
-                player.src = "https://www.youtube.com/embed/" + source + "?autoplay=1&rel=0";
+                player.src = "https://www.youtube.com/embed/" + source + (source.includes('?') ? "&" : "?") + "autoplay=1&rel=0";
             } else {
-                // Jika link luar (seperti Detik), langsung masukkan URL-nya
                 player.src = source;
             }
             
             title.innerText = "Sedang Menonton: " + name;
+            
+            // Tandai saluran yang aktif
+            event?.currentTarget?.classList.add('active');
+        }
+
+        // Fitur Remote Keyboard
+        document.addEventListener('keydown', function(e) {
+            if (e.key === "ArrowDown") {
+                currentIndex = (currentIndex + 1) % channels.length;
+                updateFocus();
+                e.preventDefault();
+            } else if (e.key === "ArrowUp") {
+                currentIndex = (currentIndex - 1 + channels.length) % channels.length;
+                updateFocus();
+                e.preventDefault();
+            } else if (e.key === "Enter") {
+                if (currentIndex !== -1) {
+                    channels[currentIndex].click();
+                }
+            }
+        });
+
+        function updateFocus() {
+            channels.forEach((c, index) => {
+                if (index === currentIndex) {
+                    c.classList.add('focused');
+                    c.focus(); // Scroll otomatis ke elemen yang dipilih
+                    c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    c.classList.remove('focused');
+                }
+            });
         }
     </script>
 </body>
 </html>
-
-
-
