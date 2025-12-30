@@ -16,7 +16,6 @@
             color: white; padding: 15px; margin: 10px; border-radius: 8px; text-decoration: none;
             font-weight: bold; font-size: 14px; transition: 0.3s;
         }
-        .download-btn:hover { background: #0056b3; }
 
         .channel { 
             display: flex; align-items: center; padding: 15px; cursor: pointer; 
@@ -35,12 +34,19 @@
         .info-bar { padding: 10px 20px; background: #111; border-bottom: 1px solid #333; }
         #titleStatus { margin: 0; font-size: 16px; color: #ccc; }
 
-        .promo-marquee {
-            background: var(--promo-bg); color: #000; padding: 8px 0;
-            font-weight: bold; font-size: 16px; text-transform: uppercase;
+        /* MODAL / OVERLAY FULL SCREEN */
+        #fullOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
         }
-        .promo-marquee a { color: #d00000; text-decoration: none; }
+        #fullOverlay iframe { width: 100%; height: 100%; border: none; }
+        .btn-close {
+            position: absolute; top: 20px; right: 20px; background: red; color: white;
+            padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+        }
 
+        .promo-marquee { background: var(--promo-bg); color: #000; padding: 8px 0; font-weight: bold; }
+        
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; height: 40%; order: 2; }
@@ -49,6 +55,11 @@
     </style>
 </head>
 <body>
+
+    <div id="fullOverlay">
+        <button class="btn-close" onclick="closeFull()">KEMBALI KE PORTAL</button>
+        <iframe id="fullFrame" src=""></iframe>
+    </div>
 
     <div class="sidebar" id="sidebar">
         <div class="header">GADINGAN TV</div>
@@ -72,46 +83,21 @@
             <h4>iNews</h4>
         </div>
 
-        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
-            <img src="mnctv.jpg">
-            <h4>MNC TV</h4>
-        </div>
-
-        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
-            <img src="transtv.jpg">
-            <h4>Trans TV</h4>
-        </div>
-        
-        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
-            <img src="trans7.jpg">
-            <h4>Trans 7</h4>
-        </div>
-
-        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
-            <img src="rcti.jpg">
-            <h4>RCTI</h4>
-        </div>
-
-        <div class="channel" tabindex="0" onclick="window.location.href='tvindonesia.html'">
+        <div class="channel" tabindex="0" onclick="openFull('tvindonesia.html')">
             <img src="tvindonesia.jpg">
             <h4>TV INDONESIA</h4>
         </div>
-        
     </div>
 
     <div class="main">
         <div class="info-bar">
             <div id="titleStatus">Sedang Menonton: TV One</div>
         </div>
-
         <div class="player-wrapper">
             <iframe id="videoPlayer" src="https://www.youtube.com/embed/yNKvkPJl-tg?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
-
         <div class="promo-marquee">
-            <marquee scrollamount="7">
-                Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan &nbsp;&nbsp; | &nbsp;&nbsp; Hubungi WA: <a href="https://wa.me/6289632950308">0896-3295-0308</a> &nbsp;&nbsp; | &nbsp;&nbsp; Internet Cepat, Harga Sahabat!
-            </marquee>
+            <marquee>Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan | WA: 0896-3295-0308</marquee>
         </div>
     </div>
 
@@ -119,24 +105,45 @@
         let currentIndex = 0;
         const channels = document.querySelectorAll('.channel');
 
+        // Fungsi Standar Ganti Channel
         function changeChan(source, name, isYouTube, element) {
             const player = document.getElementById('videoPlayer');
             const titleDisplay = document.getElementById('titleStatus');
-            
             channels.forEach(c => c.classList.remove('active'));
-            
             if (isYouTube) {
-                player.src = "https://www.youtube.com/embed/" + source + (source.includes('?') ? "&" : "?") + "autoplay=1&rel=0";
+                player.src = "https://www.youtube.com/embed/" + source + "?autoplay=1&rel=0";
             } else {
                 player.src = source;
             }
-            
             titleDisplay.innerText = "Sedang Menonton: " + name;
             if(element) element.classList.add('active');
         }
 
-        // Navigasi Remote
+        // FUNGSI KHUSUS APK: Membuka TVINDONESIA.HTML Tanpa Keluar App
+        function openFull(url) {
+            const overlay = document.getElementById('fullOverlay');
+            const frame = document.getElementById('fullFrame');
+            frame.src = url;
+            overlay.style.display = 'block';
+        }
+
+        function closeFull() {
+            const overlay = document.getElementById('fullOverlay');
+            const frame = document.getElementById('fullFrame');
+            frame.src = ""; // Stop video/audio saat ditutup
+            overlay.style.display = 'none';
+        }
+
+        // Remote Navigation
         document.addEventListener('keydown', function(e) {
+            // Jika overlay terbuka, tombol back/esc bisa digunakan untuk menutup
+            if (document.getElementById('fullOverlay').style.display === 'block') {
+                if (e.key === "Escape" || e.key === "Backspace") {
+                    closeFull();
+                }
+                return; 
+            }
+
             if (e.key === "ArrowDown") {
                 currentIndex = (currentIndex + 1) % channels.length;
                 updateFocus();
