@@ -43,15 +43,15 @@
         }
         #fullOverlay iframe { width: 100%; height: 100%; border: none; }
         
-        /* Tombol Kembali Melayang */
         .btn-close-overlay {
-            position: absolute; top: 15px; left: 15px; background: rgba(255, 0, 0, 0.6); 
-            color: white; padding: 8px 15px; border: none; border-radius: 20px; 
-            cursor: pointer; font-size: 12px; z-index: 10000; backdrop-filter: blur(5px);
+            position: absolute; top: 15px; left: 15px; background: rgba(255, 0, 0, 0.7); 
+            color: white; padding: 10px 20px; border: none; border-radius: 20px; 
+            cursor: pointer; font-size: 13px; z-index: 10000; backdrop-filter: blur(5px);
+            font-weight: bold;
         }
-        .btn-close-overlay:hover { background: red; }
 
         .promo-marquee { background: var(--promo-bg); color: #000; padding: 8px 0; font-weight: bold; }
+        .promo-marquee a { color: #d00000; text-decoration: none; }
         
         @media (max-width: 768px) {
             body { flex-direction: column; }
@@ -63,7 +63,7 @@
 <body>
 
     <div id="fullOverlay">
-        <button class="btn-close-overlay" onclick="closeFull()">← KEMBALI</button>
+        <button class="btn-close-overlay" onclick="closeFull()">← KEMBALI KE PORTAL</button>
         <iframe id="fullFrame" src=""></iframe>
     </div>
 
@@ -89,6 +89,26 @@
             <h4>iNews</h4>
         </div>
 
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
+            <img src="mnctv.jpg">
+            <h4>MNC TV</h4>
+        </div>
+
+        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
+            <img src="transtv.jpg">
+            <h4>Trans TV</h4>
+        </div>
+        
+        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
+            <img src="trans7.jpg">
+            <h4>Trans 7</h4>
+        </div>
+
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
+            <img src="rcti.jpg">
+            <h4>RCTI</h4>
+        </div>
+
         <div class="channel" tabindex="0" onclick="openFull('tvindonesia.html')">
             <img src="tvindonesia.jpg">
             <h4>TV INDONESIA</h4>
@@ -104,7 +124,7 @@
         </div>
         <div class="promo-marquee">
             <marquee scrollamount="7">
-                Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan &nbsp;&nbsp; | &nbsp;&nbsp; WA: 0896-3295-0308 &nbsp;&nbsp; | &nbsp;&nbsp; Internet Cepat, Harga Sahabat!
+                Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan &nbsp;&nbsp; | &nbsp;&nbsp; Hubungi WA: <a href="https://wa.me/6289632950308">0896-3295-0308</a> &nbsp;&nbsp; | &nbsp;&nbsp; Internet Cepat, Harga Sahabat!
             </marquee>
         </div>
     </div>
@@ -126,29 +146,27 @@
             if(element) element.classList.add('active');
         }
 
-        // FUNGSI OVERLAY (Biar tetap di dalam APK)
+        // Buka TV Indonesia tanpa mematikan video utama
         function openFull(url) {
             const overlay = document.getElementById('fullOverlay');
             const frame = document.getElementById('fullFrame');
             frame.src = url;
             overlay.style.display = 'block';
-            // Fokuskan ke overlay agar tombol back berfungsi
-            overlay.focus();
         }
 
+        // Tutup overlay (Video utama otomatis masih berputar di belakang)
         function closeFull() {
             const overlay = document.getElementById('fullOverlay');
             const frame = document.getElementById('fullFrame');
-            frame.src = ""; // Matikan suara saat keluar
+            frame.src = ""; 
             overlay.style.display = 'none';
         }
 
-        // Navigasi Remote & Tombol Back Android
+        // Remote Navigation
         document.addEventListener('keydown', function(e) {
             const isOverlayOpen = document.getElementById('fullOverlay').style.display === 'block';
 
             if (isOverlayOpen) {
-                // Jika sedang di TV Indonesia, Back atau Escape akan kembali ke portal
                 if (e.key === "Escape" || e.key === "Backspace") {
                     closeFull();
                     e.preventDefault();
