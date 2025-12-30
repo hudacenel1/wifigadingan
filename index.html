@@ -92,7 +92,7 @@
             <h4>RCTI</h4>
         </div>
 
-        <div class="channel" tabindex="0" onclick="changeChan('tvindonesia.html', 'TV INDONESIA', false, this)">
+        <div class="channel" tabindex="0" onclick="window.location.href='tvindonesia.html'">
             <img src="tvindonesia.jpg">
             <h4>TV INDONESIA</h4>
         </div>
@@ -123,14 +123,11 @@
             const player = document.getElementById('videoPlayer');
             const titleDisplay = document.getElementById('titleStatus');
             
-            // Hapus status aktif dari semua list
             channels.forEach(c => c.classList.remove('active'));
             
-            // Logika penggantian source
             if (isYouTube) {
                 player.src = "https://www.youtube.com/embed/" + source + (source.includes('?') ? "&" : "?") + "autoplay=1&rel=0";
             } else {
-                // Untuk link non-youtube (seperti tvindonesia.html) langsung dimasukkan ke src
                 player.src = source;
             }
             
@@ -138,7 +135,7 @@
             if(element) element.classList.add('active');
         }
 
-        // Navigasi Keyboard (Remote Mode)
+        // Navigasi Remote
         document.addEventListener('keydown', function(e) {
             if (e.key === "ArrowDown") {
                 currentIndex = (currentIndex + 1) % channels.length;
