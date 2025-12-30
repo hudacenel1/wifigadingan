@@ -8,6 +8,7 @@
         :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; --promo-bg: #ffd700; --download: #007bff; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
+        /* SIDEBAR */
         .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; }
         .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); position: sticky; top: 0; background: var(--sidebar); z-index: 10; }
         
@@ -27,6 +28,7 @@
         .channel img { width: 60px; height: 35px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #fff; }
         .channel h4 { margin: 0; font-size: 14px; }
 
+        /* MAIN PLAYER */
         .main { flex: 1; display: flex; flex-direction: column; }
         .player-wrapper { flex: 1; position: relative; background: #000; }
         #videoPlayer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
@@ -34,16 +36,20 @@
         .info-bar { padding: 10px 20px; background: #111; border-bottom: 1px solid #333; }
         #titleStatus { margin: 0; font-size: 16px; color: #ccc; }
 
-        /* MODAL / OVERLAY FULL SCREEN */
+        /* OVERLAY FULL TV INDONESIA */
         #fullOverlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999;
         }
         #fullOverlay iframe { width: 100%; height: 100%; border: none; }
-        .btn-close {
-            position: absolute; top: 20px; right: 20px; background: red; color: white;
-            padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;
+        
+        /* Tombol Kembali Melayang */
+        .btn-close-overlay {
+            position: absolute; top: 15px; left: 15px; background: rgba(255, 0, 0, 0.6); 
+            color: white; padding: 8px 15px; border: none; border-radius: 20px; 
+            cursor: pointer; font-size: 12px; z-index: 10000; backdrop-filter: blur(5px);
         }
+        .btn-close-overlay:hover { background: red; }
 
         .promo-marquee { background: var(--promo-bg); color: #000; padding: 8px 0; font-weight: bold; }
         
@@ -57,7 +63,7 @@
 <body>
 
     <div id="fullOverlay">
-        <button class="btn-close" onclick="closeFull()">KEMBALI KE PORTAL</button>
+        <button class="btn-close-overlay" onclick="closeFull()">← KEMBALI</button>
         <iframe id="fullFrame" src=""></iframe>
     </div>
 
@@ -97,7 +103,9 @@
             <iframe id="videoPlayer" src="https://www.youtube.com/embed/yNKvkPJl-tg?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         <div class="promo-marquee">
-            <marquee>Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan | WA: 0896-3295-0308</marquee>
+            <marquee scrollamount="7">
+                Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan &nbsp;&nbsp; | &nbsp;&nbsp; WA: 0896-3295-0308 &nbsp;&nbsp; | &nbsp;&nbsp; Internet Cepat, Harga Sahabat!
+            </marquee>
         </div>
     </div>
 
@@ -105,7 +113,6 @@
         let currentIndex = 0;
         const channels = document.querySelectorAll('.channel');
 
-        // Fungsi Standar Ganti Channel
         function changeChan(source, name, isYouTube, element) {
             const player = document.getElementById('videoPlayer');
             const titleDisplay = document.getElementById('titleStatus');
@@ -119,27 +126,32 @@
             if(element) element.classList.add('active');
         }
 
-        // FUNGSI KHUSUS APK: Membuka TVINDONESIA.HTML Tanpa Keluar App
+        // FUNGSI OVERLAY (Biar tetap di dalam APK)
         function openFull(url) {
             const overlay = document.getElementById('fullOverlay');
             const frame = document.getElementById('fullFrame');
             frame.src = url;
             overlay.style.display = 'block';
+            // Fokuskan ke overlay agar tombol back berfungsi
+            overlay.focus();
         }
 
         function closeFull() {
             const overlay = document.getElementById('fullOverlay');
             const frame = document.getElementById('fullFrame');
-            frame.src = ""; // Stop video/audio saat ditutup
+            frame.src = ""; // Matikan suara saat keluar
             overlay.style.display = 'none';
         }
 
-        // Remote Navigation
+        // Navigasi Remote & Tombol Back Android
         document.addEventListener('keydown', function(e) {
-            // Jika overlay terbuka, tombol back/esc bisa digunakan untuk menutup
-            if (document.getElementById('fullOverlay').style.display === 'block') {
+            const isOverlayOpen = document.getElementById('fullOverlay').style.display === 'block';
+
+            if (isOverlayOpen) {
+                // Jika sedang di TV Indonesia, Back atau Escape akan kembali ke portal
                 if (e.key === "Escape" || e.key === "Backspace") {
                     closeFull();
+                    e.preventDefault();
                 }
                 return; 
             }
