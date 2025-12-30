@@ -1,33 +1,36 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal TV Online Pro - Remote Mode</title>
     <style>
-        :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; --promo: #ffd700; }
+        :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; --promo-bg: #ffd700; --download: #007bff; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; display: flex; flex-direction: column; }
+        .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; }
         .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); position: sticky; top: 0; background: var(--sidebar); z-index: 10; }
         
-        /* Gaya Banner Promosi Wifi */
-        .promo-banner {
-            background: var(--promo);
-            color: #000;
+        /* Tombol Download APK */
+        .download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--download);
+            color: white;
             padding: 15px;
             margin: 10px;
             border-radius: 8px;
-            text-align: center;
             text-decoration: none;
-            display: block;
-            transition: transform 0.2s;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
         }
-        .promo-banner:hover { transform: scale(1.02); }
-        .promo-banner h3 { margin: 0; font-size: 16px; font-weight: bold; }
-        .promo-banner p { margin: 5px 0; font-size: 14px; font-weight: bold; }
-        .promo-banner .wa-btn { background: #25d366; color: white; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-top: 5px; font-size: 12px; }
+        .download-btn:hover { background: #0056b3; transform: translateY(-2px); }
+        .download-btn span { margin-left: 8px; }
 
-        .channel-container { flex: 1; overflow-y: auto; }
         .channel { 
             display: flex; align-items: center; padding: 15px; cursor: pointer; 
             transition: 0.2s; border-bottom: 1px solid #222; outline: none;
@@ -42,6 +45,17 @@
         .player-wrapper { flex: 1; position: relative; background: #000; }
         #videoPlayer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
+        .promo-marquee {
+            background: var(--promo-bg);
+            color: #000;
+            padding: 8px 0;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000;
+        }
+        .promo-marquee a { color: #d00000; text-decoration: none; }
+
         .info { padding: 20px; background: #111; border-top: 1px solid #333; }
         .instruction { font-size: 12px; color: #888; margin-top: 5px; }
         
@@ -56,53 +70,53 @@
 
     <div class="sidebar" id="sidebar">
         <div class="header">DAFTAR SALURAN</div>
-
-        <a href="https://wa.me/6289632950308?text=Halo,%20saya%20tertarik%20pasang%20Wifi%20Gadingan" target="_blank" class="promo-banner">
-            <h3>PASANG WIFI GADINGAN</h3>
-            <p>Hanya Rp 60.000 / Bulan</p>
-            <div class="wa-btn">Klik Hubungi: 089632950308</div>
-        </a>
         
-        <div class="channel-container">
-            <div class="channel" tabindex="0" onclick="changeChan('yNKvkPJl-tg', 'TV One Live', true, this)">
-                <img src="https://img.youtube.com/vi/yNKvkPJl-tg/mqdefault.jpg">
-                <h4>TV One</h4>
-            </div>
+        <a href="LINK_DOWNLOAD_APK_DISINI" class="download-btn" download>
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+            </svg>
+            <span>DOWNLOAD APK ANDROID</span>
+        </a>
 
-            <div class="channel" tabindex="0" onclick="changeChan('https://www.cnnindonesia.com/tv/embed?ref=transmedia', 'CNN Indonesia', false, this)">
-                <img src="CNN.jpg" alt="CNN">
-                <h4>CNN Indonesia</h4>
-            </div>
+        <div class="channel" tabindex="0" onclick="changeChan('yNKvkPJl-tg', 'TV One Live', true, this)">
+            <img src="https://img.youtube.com/vi/yNKvkPJl-tg/mqdefault.jpg">
+            <h4>TV One</h4>
+        </div>
 
-            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'iNews TV', false, this)">
-                <img src="inews.jpg" alt="iNews">
-                <h4>iNews</h4>
-            </div>
+        <div class="channel" tabindex="0" onclick="changeChan('https://www.cnnindonesia.com/tv/embed?ref=transmedia', 'CNN Indonesia', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=CNN" alt="CNN">
+            <h4>CNN Indonesia</h4>
+        </div>
 
-            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
-                <img src="mnctv.jpg" alt="MNC">
-                <h4>MNC TV</h4>
-            </div>
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'iNews TV', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=iNews" alt="iNews">
+            <h4>iNews</h4>
+        </div>
 
-            <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
-                <img src="transtv.jpg" alt="TransTV">
-                <h4>Trans TV</h4>
-            </div>
-            
-            <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
-                <img src="trans7.jpg" alt="Trans 7">
-                <h4>Trans 7</h4>
-            </div>
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=MNC" alt="MNC">
+            <h4>MNC TV</h4>
+        </div>
 
-            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
-                <img src="rcti.jpg" alt="RCTI">
-                <h4>RCTI</h4>
-            </div>
+        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=TransTV" alt="TransTV">
+            <h4>Trans TV</h4>
+        </div>
+        
+        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=Trans7" alt="Trans 7">
+            <h4>Trans 7</h4>
+        </div>
 
-            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==', 'GTV', false, this)">
-                <img src="gtv.jpg" alt="GTV">
-                <h4>GTV</h4>
-            </div>
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=RCTI" alt="RCTI">
+            <h4>RCTI</h4>
+        </div>
+
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==', 'GTV', false, this)">
+            <img src="https://via.placeholder.com/60x35?text=GTV" alt="GTV">
+            <h4>GTV</h4>
         </div>
     </div>
 
@@ -110,6 +124,13 @@
         <div class="player-wrapper">
             <iframe id="videoPlayer" src="https://www.youtube.com/embed/yNKvkPJl-tg?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
+
+        <div class="promo-marquee">
+            <marquee scrollamount="7">
+                Promo Spesial! Pasang Wifi Gadingan Hanya Rp 60.000/Bulan &nbsp;&nbsp; | &nbsp;&nbsp; Hubungi WA: <a href="https://wa.me/6289632950308">0896-3295-0308</a> &nbsp;&nbsp; | &nbsp;&nbsp; Internet Cepat, Harga Sahabat!
+            </marquee>
+        </div>
+
         <div class="info">
             <h2 id="title">Sedang Menonton: TV One Live</h2>
             <p>Status: <span style="color: lime;">Online</span></p>
@@ -134,13 +155,9 @@
             }
             
             title.innerText = "Sedang Menonton: " + name;
-            
-            if(element) {
-                element.classList.add('active');
-            }
+            if(element) element.classList.add('active');
         }
 
-        // Remote Keyboard
         document.addEventListener('keydown', function(e) {
             if (e.key === "ArrowDown") {
                 currentIndex = (currentIndex + 1) % channels.length;
@@ -171,5 +188,3 @@
     </script>
 </body>
 </html>
-
-
