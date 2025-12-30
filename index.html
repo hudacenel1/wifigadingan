@@ -1,25 +1,42 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal TV Online Pro - Remote Mode</title>
     <style>
-        :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; }
+        :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; --promo: #ffd700; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; }
+        .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; display: flex; flex-direction: column; }
         .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); position: sticky; top: 0; background: var(--sidebar); z-index: 10; }
         
+        /* Gaya Banner Promosi Wifi */
+        .promo-banner {
+            background: var(--promo);
+            color: #000;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s;
+        }
+        .promo-banner:hover { transform: scale(1.02); }
+        .promo-banner h3 { margin: 0; font-size: 16px; font-weight: bold; }
+        .promo-banner p { margin: 5px 0; font-size: 14px; font-weight: bold; }
+        .promo-banner .wa-btn { background: #25d366; color: white; padding: 5px 10px; border-radius: 20px; display: inline-block; margin-top: 5px; font-size: 12px; }
+
+        .channel-container { flex: 1; overflow-y: auto; }
         .channel { 
             display: flex; align-items: center; padding: 15px; cursor: pointer; 
             transition: 0.2s; border-bottom: 1px solid #222; outline: none;
         }
         .channel:hover, .channel.focused { background: var(--focus); border-left: 4px solid var(--primary); }
-        .channel.active { background: var(--active); }
+        .channel.active { background: var(--active); border-left: 4px solid var(--primary); }
         
         .channel img { width: 60px; height: 35px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #000; }
-        .channel h4 { margin: 0; font-size: 14px; }
+        .channel h4 { margin: 0; font-size: 14px; text-transform: uppercase; }
 
         .main { flex: 1; display: flex; flex-direction: column; }
         .player-wrapper { flex: 1; position: relative; background: #000; }
@@ -39,42 +56,54 @@
 
     <div class="sidebar" id="sidebar">
         <div class="header">DAFTAR SALURAN</div>
+
+        <a href="https://wa.me/6289632950308?text=Halo,%20saya%20tertarik%20pasang%20Wifi%20Gadingan" target="_blank" class="promo-banner">
+            <h3>PASANG WIFI GADINGAN</h3>
+            <p>Hanya Rp 60.000 / Bulan</p>
+            <div class="wa-btn">Klik Hubungi: 089632950308</div>
+        </a>
         
-        <div class="channel" tabindex="0" onclick="changeChan('yNKvkPJl-tg', 'TV One Live', true)">
-            <img src="https://img.youtube.com/vi/yNKvkPJl-tg/mqdefault.jpg">
-            <h4>TV One</h4>
+        <div class="channel-container">
+            <div class="channel" tabindex="0" onclick="changeChan('yNKvkPJl-tg', 'TV One Live', true, this)">
+                <img src="https://img.youtube.com/vi/yNKvkPJl-tg/mqdefault.jpg">
+                <h4>TV One</h4>
+            </div>
+
+            <div class="channel" tabindex="0" onclick="changeChan('https://www.cnnindonesia.com/tv/embed?ref=transmedia', 'CNN Indonesia', false, this)">
+                <img src="CNN.jpg" alt="CNN">
+                <h4>CNN Indonesia</h4>
+            </div>
+
+            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'iNews TV', false, this)">
+                <img src="iNews.jpg" alt="iNews">
+                <h4>iNews</h4>
+            </div>
+
+            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
+                <img src="https://via.placeholder.com/60x35?text=MNC" alt="MNC">
+                <h4>MNC TV</h4>
+            </div>
+
+            <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
+                <img src="transtv.jpg" alt="TransTV">
+                <h4>Trans TV</h4>
+            </div>
+            
+            <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
+                <img src="trans7" alt="Trans 7">
+                <h4>Trans 7</h4>
+            </div>
+
+            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
+                <img src="rcti.jpg" alt="RCTI">
+                <h4>RCTI</h4>
+            </div>
+
+            <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==', 'GTV', false, this)">
+                <img src="gtv.jpg" alt="GTV">
+                <h4>GTV</h4>
+            </div>
         </div>
-
-        
-
-        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'TVRI Nasional', true)">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/TVRI_Nasional_Logo.svg/1200px-TVRI_Nasional_Logo.svg.png" alt="TVRI Nasional Logo" style="width:100px;">
-    <h4>TVRI Nasional</h4>
-</div>
-
-       
-
-        
-        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Transtv', false)">
-    <img src="transtv.jpg" alt="Logo Transtv" style="background: white; width: 50px; height: auto;">
-    <h4>Trantv</h4>
-</div>
-        
-        <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false)">
-    <img src="trans7.jpg" alt="Logo Trans 7" style="background: white; width: 50px; height: auto;">
-    <h4>Trans 7</h4>
-</div>
-        <div class="channel-list">
-    <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'Trans 7', false)">
-        <img src="rcti.jpg" style="background: white;">
-        <h4>rcti</h4>
-    </div>
-
-    <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==', 'Trans TV', false)">
-        <img src="gtv.jpg" style="background: white;">
-        <h4>gtv</h4>
-    </div>
-</div>
     </div>
 
     <div class="main">
@@ -92,11 +121,10 @@
         let currentIndex = -1;
         const channels = document.querySelectorAll('.channel');
 
-        function changeChan(source, name, isYouTube) {
+        function changeChan(source, name, isYouTube, element) {
             const player = document.getElementById('videoPlayer');
             const title = document.getElementById('title');
             
-            // Hapus kelas active dari semua saluran
             channels.forEach(c => c.classList.remove('active'));
             
             if (isYouTube) {
@@ -107,11 +135,12 @@
             
             title.innerText = "Sedang Menonton: " + name;
             
-            // Tandai saluran yang aktif
-            event?.currentTarget?.classList.add('active');
+            if(element) {
+                element.classList.add('active');
+            }
         }
 
-        // Fitur Remote Keyboard
+        // Remote Keyboard
         document.addEventListener('keydown', function(e) {
             if (e.key === "ArrowDown") {
                 currentIndex = (currentIndex + 1) % channels.length;
@@ -132,7 +161,7 @@
             channels.forEach((c, index) => {
                 if (index === currentIndex) {
                     c.classList.add('focused');
-                    c.focus(); // Scroll otomatis ke elemen yang dipilih
+                    c.focus(); 
                     c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 } else {
                     c.classList.remove('focused');
@@ -142,11 +171,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
