@@ -25,11 +25,8 @@
             font-weight: bold;
             font-size: 14px;
             transition: 0.3s;
-            border: none;
-            cursor: pointer;
         }
-        .download-btn:hover { background: #0056b3; transform: translateY(-2px); }
-        .download-btn span { margin-left: 8px; }
+        .download-btn:hover { background: #0056b3; }
 
         .channel { 
             display: flex; align-items: center; padding: 15px; cursor: pointer; 
@@ -38,8 +35,8 @@
         .channel:hover, .channel.focused { background: var(--focus); border-left: 4px solid var(--primary); }
         .channel.active { background: var(--active); border-left: 4px solid var(--primary); }
         
-        .channel img { width: 60px; height: 35px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #000; }
-        .channel h4 { margin: 0; font-size: 14px; text-transform: uppercase; }
+        .channel img { width: 60px; height: 35px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #fff; }
+        .channel h4 { margin: 0; font-size: 14px; }
 
         .main { flex: 1; display: flex; flex-direction: column; }
         .player-wrapper { flex: 1; position: relative; background: #000; }
@@ -52,7 +49,6 @@
             font-weight: bold;
             font-size: 16px;
             text-transform: uppercase;
-            border-bottom: 2px solid #000;
         }
         .promo-marquee a { color: #d00000; text-decoration: none; }
 
@@ -71,11 +67,7 @@
     <div class="sidebar" id="sidebar">
         <div class="header">DAFTAR SALURAN</div>
         
-        <a href="LINK_DOWNLOAD_APK_DISINI" class="download-btn" download>
-            <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-            </svg>
+        <a href="LINK_DOWNLOAD_APK_DISINI" class="download-btn">
             <span>DOWNLOAD APK ANDROID</span>
         </a>
 
@@ -85,37 +77,37 @@
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://www.cnnindonesia.com/tv/embed?ref=transmedia', 'CNN Indonesia', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=CNN" alt="CNN">
+            <img src="transtv.jpg">
             <h4>CNN Indonesia</h4>
         </div>
 
-        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'iNews TV', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=iNews" alt="iNews">
+        <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'iNews', false, this)">
+            <img src="transtv.jpg">
             <h4>iNews</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=MNC" alt="MNC">
+            <img src="transtv.jpg">
             <h4>MNC TV</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=TransTV" alt="TransTV">
+            <img src="transtv.jpg">
             <h4>Trans TV</h4>
         </div>
         
         <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=Trans7" alt="Trans 7">
+            <img src="trans7.jpg">
             <h4>Trans 7</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=RCTI" alt="RCTI">
+            <img src="rcti.jpg">
             <h4>RCTI</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==', 'GTV', false, this)">
-            <img src="https://via.placeholder.com/60x35?text=GTV" alt="GTV">
+            <img src="gtv.jpg">
             <h4>GTV</h4>
         </div>
     </div>
