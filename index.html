@@ -8,41 +8,39 @@
         :root { --primary: #ff0000; --bg: #0a0a0a; --sidebar: #1a1a1a; --active: #333; --focus: #444; --promo-bg: #ffd700; --download: #007bff; }
         body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Sidebar Styles */
         .sidebar { width: 300px; background: var(--sidebar); overflow-y: auto; border-right: 1px solid #333; }
-        .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); position: sticky; top: 0; background: var(--sidebar); z-index: 10; text-align: center; }
+        .header { padding: 20px; font-weight: bold; font-size: 20px; border-bottom: 1px solid #333; color: var(--primary); position: sticky; top: 0; background: var(--sidebar); z-index: 10; }
         
         .download-btn {
             display: flex; align-items: center; justify-content: center; background: var(--download);
-            color: white; padding: 12px; margin: 10px; border-radius: 8px; text-decoration: none;
-            font-weight: bold; font-size: 13px; transition: 0.3s;
+            color: white; padding: 15px; margin: 10px; border-radius: 8px; text-decoration: none;
+            font-weight: bold; font-size: 14px; transition: 0.3s;
         }
         .download-btn:hover { background: #0056b3; }
 
         .channel { 
-            display: flex; align-items: center; padding: 12px; cursor: pointer; 
+            display: flex; align-items: center; padding: 15px; cursor: pointer; 
             transition: 0.2s; border-bottom: 1px solid #222; outline: none;
         }
         .channel:hover, .channel.focused { background: var(--focus); border-left: 4px solid var(--primary); }
         .channel.active { background: var(--active); border-left: 4px solid var(--primary); }
         
         .channel img { width: 60px; height: 35px; object-fit: cover; border-radius: 4px; margin-right: 12px; background: #fff; }
-        .channel h4 { margin: 0; font-size: 14px; font-weight: 500; }
+        .channel h4 { margin: 0; font-size: 14px; }
 
-        /* Main Player Styles */
         .main { flex: 1; display: flex; flex-direction: column; }
         .player-wrapper { flex: 1; position: relative; background: #000; }
         #videoPlayer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
         
         .info-bar { padding: 10px 20px; background: #111; border-bottom: 1px solid #333; }
-        #currentTitle { margin: 0; font-size: 16px; color: #eee; }
+        #titleStatus { margin: 0; font-size: 16px; color: #ccc; }
 
         .promo-marquee {
             background: var(--promo-bg); color: #000; padding: 8px 0;
-            font-weight: bold; font-size: 15px; text-transform: uppercase;
+            font-weight: bold; font-size: 16px; text-transform: uppercase;
         }
         .promo-marquee a { color: #d00000; text-decoration: none; }
-        
+
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { width: 100%; height: 40%; order: 2; }
@@ -55,7 +53,7 @@
     <div class="sidebar" id="sidebar">
         <div class="header">GADINGAN TV</div>
         
-        <a href="gadingantv.apk" class="download-btn">
+        <a href="gadingantv.apk" class="download-btn" download="GadinganTV.apk">
             <span>DOWNLOAD APK TV GADINGAN</span>
         </a>
 
@@ -65,44 +63,44 @@
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://www.cnnindonesia.com/tv/embed?ref=transmedia', 'CNN Indonesia', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/CNN_Indonesia_logo.svg/1200px-CNN_Indonesia_logo.svg.png">
+            <img src="cnn.png">
             <h4>CNN Indonesia</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGaW5ld3MlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'iNews', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/INews_2023.png">
+            <img src="inews.jpg">
             <h4>iNews</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGbW5jdHYlMkZpbmV3c2lkJmhlaWdodD0xMDAlMjUmd2lkdGg9MTAwJTI1', 'MNC TV', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/id/thumb/d/d4/Logo_MNCTV.png/250px-Logo_MNCTV.png">
+            <img src="mnctv.jpg">
             <h4>MNC TV</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-transtv', 'Trans TV', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Trans_TV_logo_%282013%29.png">
+            <img src="transtv.jpg">
             <h4>Trans TV</h4>
         </div>
         
         <div class="channel" tabindex="0" onclick="changeChan('https://20.detik.com/watch/livestreaming-trans7', 'Trans 7', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/TRANS7.svg/1200px-TRANS7.svg.png">
+            <img src="trans7.jpg">
             <h4>Trans 7</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGcmN0aSUyRmluZXdzaWQmaGVpZ2h0PTEwMCUyNSZ3aWR0aD0xMDAlMjU=', 'RCTI', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/RCTI_Logo.svg/2560px-RCTI_Logo.svg.png">
+            <img src="rcti.jpg">
             <h4>RCTI</h4>
         </div>
 
         <div class="channel" tabindex="0" onclick="changeChan('https://sindikasi.inews.id/embed/video/YWdlbnQ9ZGVza3RvcCZ1cmw9aHR0cHMlM0ElMkYlMkZlbWJlZC5yY3RpcGx1cy5jb20lMkZsaXZlJTJGZ3R2JTJGaW5ld3NpZCZoZWlnaHQ9MTAwJTI1JndpZHRoPTEwMCUyNQ==', 'GTV', false, this)">
-            <img src="https://upload.wikimedia.org/wikipedia/id/3/30/GTV_2024.png">
+            <img src="gtv.jpg">
             <h4>GTV</h4>
         </div>
     </div>
 
     <div class="main">
         <div class="info-bar">
-            <h2 id="currentTitle">Sedang Menonton: TV One</h2>
+            <div id="titleStatus">Sedang Menonton: TV One</div>
         </div>
 
         <div class="player-wrapper">
@@ -122,24 +120,20 @@
 
         function changeChan(source, name, isYouTube, element) {
             const player = document.getElementById('videoPlayer');
-            const titleDisplay = document.getElementById('currentTitle');
+            const titleDisplay = document.getElementById('titleStatus');
             
-            // Hapus kelas aktif dari semua channel
             channels.forEach(c => c.classList.remove('active'));
             
-            // Set sumber video
             if (isYouTube) {
                 player.src = "https://www.youtube.com/embed/" + source + (source.includes('?') ? "&" : "?") + "autoplay=1&rel=0";
             } else {
                 player.src = source;
             }
             
-            // Update UI
             titleDisplay.innerText = "Sedang Menonton: " + name;
             if(element) element.classList.add('active');
         }
 
-        // Navigasi Keyboard/Remote
         document.addEventListener('keydown', function(e) {
             if (e.key === "ArrowDown") {
                 currentIndex = (currentIndex + 1) % channels.length;
